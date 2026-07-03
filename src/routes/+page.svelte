@@ -9,6 +9,7 @@
 		BarChart2,
 		CheckCircle
 	} from '@lucide/svelte';
+	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
 
 	let formSubmitted = false;
 	let formLoading = false;
@@ -24,32 +25,57 @@
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200',
 			title: 'Portfolio View',
-			description: 'Complete overview of your RSU and ESPP holdings with real-time values and gains/losses'
+			description: 'Complete overview of your RSU and ESPP holdings with real-time values and gains/losses',
+			blurRegions: [
+				{ top: '1%', left: '8%', width: '35%', height: '8%' },
+				{ top: '3%', left: '60%', width: '35%', height: '6%' }
+			]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F22c302b46d874b8b8722f63024cf092b?format=webp&width=800&height=1200',
 			title: 'Tax Centre - Capital Gains',
-			description: 'Track capital gains and losses for tax reporting organized by financial year'
+			description: 'Track capital gains and losses for tax reporting organized by financial year',
+			blurRegions: [
+				{ top: '1%', left: '8%', width: '35%', height: '8%' },
+				{ top: '15%', left: '15%', width: '25%', height: '6%' },
+				{ top: '25%', left: '60%', width: '25%', height: '50%' }
+			]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff87c7017d6284956a8ce80d9ceb893c6?format=webp&width=800&height=1200',
 			title: 'Tax Centre - Schedule FA',
-			description: 'Detailed Schedule FA data for Indian tax reporting with all required fields'
+			description: 'Detailed Schedule FA data for Indian tax reporting with all required fields',
+			blurRegions: [
+				{ top: '1%', left: '8%', width: '35%', height: '8%' },
+				{ top: '20%', left: '10%', width: '80%', height: '60%' }
+			]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff71eef4282dc4009b81e051cd742e999?format=webp&width=800&height=1200',
 			title: 'Tax Filing Assistant',
-			description: 'Step-by-step guidance for preparing Schedule FA with country and income details'
+			description: 'Step-by-step guidance for preparing Schedule FA with country and income details',
+			blurRegions: [
+				{ top: '1%', left: '8%', width: '35%', height: '8%' },
+				{ top: '18%', left: '10%', width: '80%', height: '50%' }
+			]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F7e71c1411bd64f07ab68e317b7ab0db9?format=webp&width=800&height=1200',
 			title: 'Sell Advisor',
-			description: 'Smart recommendations for optimizing tax outcomes when selling your shares'
+			description: 'Smart recommendations for optimizing tax outcomes when selling your shares',
+			blurRegions: [
+				{ top: '1%', left: '8%', width: '35%', height: '8%' },
+				{ top: '25%', left: '10%', width: '80%', height: '45%' }
+			]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12babee9cf6043bfb764f9e9ec54bd50?format=webp&width=800&height=1200',
 			title: 'Benefits History',
-			description: 'Complete history of RSU grants, vesting schedules, and ESPP purchases'
+			description: 'Complete history of RSU grants, vesting schedules, and ESPP purchases',
+			blurRegions: [
+				{ top: '1%', left: '8%', width: '35%', height: '8%' },
+				{ top: '25%', left: '10%', width: '80%', height: '50%' }
+			]
 		}
 	];
 
@@ -190,10 +216,14 @@
 				<div
 					class="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden"
 				>
-					<img
+					<BlurredScreenshot
 						src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
 						alt="Stock Plan Companion App - Portfolio View"
-						class="w-full h-auto object-cover"
+						blurRegions={[
+							{ top: '1%', left: '8%', width: '35%', height: '8%' },
+							{ top: '3%', left: '60%', width: '35%', height: '6%' },
+							{ top: '8%', left: '8%', width: '40%', height: '5%' }
+						]}
 					/>
 				</div>
 			</div>
@@ -233,10 +263,10 @@
 			<!-- Main Viewer -->
 			<div class="lg:col-span-2">
 				<div class="rounded-xl border border-gray-200 shadow-xl overflow-hidden bg-gray-900">
-					<img
+					<BlurredScreenshot
 						src={screenshots[activeScreenshot].src}
 						alt={screenshots[activeScreenshot].title}
-						class="w-full h-auto"
+						blurRegions={screenshots[activeScreenshot].blurRegions || []}
 					/>
 
 					<!-- Navigation Overlay -->
@@ -280,11 +310,19 @@
 								? 'border-blue-600 shadow-md'
 								: 'border-gray-200 hover:border-gray-300'}"
 						>
-							<img
-								src={screenshot.src}
-								alt={screenshot.title}
-								class="w-20 h-28 object-cover"
-							/>
+							<div class="w-20 h-28 overflow-hidden relative">
+								<img
+									src={screenshot.src}
+									alt={screenshot.title}
+									class="w-full h-full object-cover"
+								/>
+								{#each (screenshot.blurRegions || []) as region}
+									<div
+										class="absolute"
+										style="top: {region.top}; left: {region.left}; width: {region.width}; height: {region.height}; backdrop-filter: blur(6px); border-radius: 0.25rem;"
+									/>
+								{/each}
+							</div>
 						</button>
 					{/each}
 				</div>
@@ -463,10 +501,13 @@
 
 				<!-- Right: Screenshot -->
 				<div class="bg-gray-50 p-8 flex items-center justify-center">
-					<img
+					<BlurredScreenshot
 						src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F4020280870af4ce3bb40ef90ac8dcbfd?format=webp&width=800&height=1200"
 						alt="Upload Files Interface"
-						class="max-w-full h-auto rounded-lg border border-gray-200 shadow-md"
+						blurRegions={[
+							{ top: '8%', left: '10%', width: '80%', height: '12%' },
+							{ top: '25%', left: '10%', width: '80%', height: '50%' }
+						]}
 					/>
 				</div>
 			</div>
