@@ -1,4 +1,15 @@
 <script lang="ts">
+	import {
+		FileText,
+		BarChart3,
+		Calendar,
+		FileCheck,
+		Laptop,
+		Lock,
+		BarChart2,
+		CheckCircle
+	} from '@lucide/svelte';
+
 	let formSubmitted = false;
 	let formLoading = false;
 	let formError = '';
@@ -52,32 +63,32 @@
 
 	const features = [
 		{
-			icon: '📄',
+			icon: FileText,
 			title: 'Import E*TRADE Documents',
 			description: 'Easily import your E*TRADE statements and records'
 		},
 		{
-			icon: '📊',
+			icon: BarChart2,
 			title: 'Track RSUs and ESPPs',
 			description: 'Comprehensive tracking of all your stock holdings'
 		},
 		{
-			icon: '📅',
+			icon: Calendar,
 			title: 'Vesting & Transaction History',
 			description: 'Organize vesting schedules and transaction records'
 		},
 		{
-			icon: '🧾',
+			icon: FileCheck,
 			title: 'Tax Report Preparation',
 			description: 'Prepare all information needed for tax reporting'
 		},
 		{
-			icon: '💻',
+			icon: Laptop,
 			title: 'Desktop Application',
 			description: 'Fast, native performance on your machine'
 		},
 		{
-			icon: '🔒',
+			icon: Lock,
 			title: 'Privacy First',
 			description: 'Your data stays on your computer. Always.'
 		}
@@ -126,7 +137,7 @@
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
 			<div class="flex items-center gap-2">
 				<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-					<span class="text-lg font-bold text-white">📊</span>
+					<BarChart3 size={20} class="text-white" />
 				</div>
 				<span class="text-xl font-semibold text-gray-900">Stock Plan Companion</span>
 			</div>
@@ -201,7 +212,9 @@
 				<div
 					class="rounded-lg border border-gray-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
 				>
-					<div class="mb-4 text-3xl">{feature.icon}</div>
+					<div class="mb-4 text-blue-600">
+						<svelte:component this={feature.icon} size={32} />
+					</div>
 					<h3 class="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
 					<p class="text-sm text-gray-600">{feature.description}</p>
 				</div>
@@ -318,22 +331,22 @@
 
 		<div class="grid gap-8 lg:grid-cols-2">
 			<div class="rounded-lg border border-green-200 bg-green-50 p-8">
-				<h3 class="mb-6 text-xl font-semibold text-gray-900">Available Today ✓</h3>
+				<h3 class="mb-6 text-xl font-semibold text-gray-900">Available Today</h3>
 				<ul class="space-y-3">
 					<li class="flex items-start gap-3">
-						<span class="mt-1 text-green-600">✓</span>
+						<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
 						<span class="text-gray-700">E*TRADE support</span>
 					</li>
 					<li class="flex items-start gap-3">
-						<span class="mt-1 text-green-600">✓</span>
+						<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
 						<span class="text-gray-700">RSU & ESPP record management</span>
 					</li>
 					<li class="flex items-start gap-3">
-						<span class="mt-1 text-green-600">✓</span>
+						<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
 						<span class="text-gray-700">Desktop application</span>
 					</li>
 					<li class="flex items-start gap-3">
-						<span class="mt-1 text-green-600">✓</span>
+						<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
 						<span class="text-gray-700">Open source</span>
 					</li>
 				</ul>
@@ -515,7 +528,9 @@
 			{:else}
 				<div class="rounded-lg border border-green-200 bg-green-50 p-8">
 					<div class="mb-6 text-center">
-						<p class="mb-2 text-2xl">✓</p>
+						<div class="mb-2 flex justify-center">
+							<CheckCircle size={40} class="text-green-600" />
+						</div>
 						<h3 class="mb-2 text-xl font-semibold text-gray-900">Registration Successful!</h3>
 						<p class="text-gray-600">Download your copy for your platform:</p>
 					</div>
