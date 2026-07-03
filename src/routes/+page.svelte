@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
 	let formSubmitted = false;
 	let formLoading = false;
 	let formError = '';
@@ -9,6 +7,39 @@
 		windows: '#',
 		linux: '#'
 	};
+
+	const features = [
+		{
+			icon: '📄',
+			title: 'Import E*TRADE Documents',
+			description: 'Easily import your E*TRADE statements and records'
+		},
+		{
+			icon: '📊',
+			title: 'Track RSUs and ESPPs',
+			description: 'Comprehensive tracking of all your stock holdings'
+		},
+		{
+			icon: '📅',
+			title: 'Vesting & Transaction History',
+			description: 'Organize vesting schedules and transaction records'
+		},
+		{
+			icon: '🧾',
+			title: 'Tax Report Preparation',
+			description: 'Prepare all information needed for tax reporting'
+		},
+		{
+			icon: '💻',
+			title: 'Desktop Application',
+			description: 'Fast, native performance on your machine'
+		},
+		{
+			icon: '🔒',
+			title: 'Privacy First',
+			description: 'Your data stays on your computer. Always.'
+		}
+	];
 
 	async function handleFormSubmit(e: Event) {
 		const form = e.target as HTMLFormElement;
@@ -29,7 +60,6 @@
 			if (response.ok) {
 				formSubmitted = true;
 				form.reset();
-				// Simulate showing download links after 1 second
 				setTimeout(() => {
 					downloadLinks = {
 						mac: 'https://github.com/yourusername/stock-plan-companion/releases',
@@ -352,38 +382,3 @@
 		scroll-behavior: smooth;
 	}
 </style>
-
-<script context="module" lang="ts">
-	const features = [
-		{
-			icon: '📄',
-			title: 'Import E*TRADE Documents',
-			description: 'Easily import your E*TRADE statements and records'
-		},
-		{
-			icon: '📊',
-			title: 'Track RSUs and ESPPs',
-			description: 'Comprehensive tracking of all your stock holdings'
-		},
-		{
-			icon: '📅',
-			title: 'Vesting & Transaction History',
-			description: 'Organize vesting schedules and transaction records'
-		},
-		{
-			icon: '🧾',
-			title: 'Tax Report Preparation',
-			description: 'Prepare all information needed for tax reporting'
-		},
-		{
-			icon: '💻',
-			title: 'Desktop Application',
-			description: 'Fast, native performance on your machine'
-		},
-		{
-			icon: '🔒',
-			title: 'Privacy First',
-			description: 'Your data stays on your computer. Always.'
-		}
-	];
-</script>
