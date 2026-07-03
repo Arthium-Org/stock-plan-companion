@@ -2,11 +2,53 @@
 	let formSubmitted = false;
 	let formLoading = false;
 	let formError = '';
+	let activeScreenshot = 0;
 	let downloadLinks = {
 		mac: '#',
 		windows: '#',
 		linux: '#'
 	};
+
+	const screenshots = [
+		{
+			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200',
+			title: 'Portfolio View',
+			description: 'Complete overview of your RSU and ESPP holdings with real-time values and gains/losses'
+		},
+		{
+			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F22c302b46d874b8b8722f63024cf092b?format=webp&width=800&height=1200',
+			title: 'Tax Centre - Capital Gains',
+			description: 'Track capital gains and losses for tax reporting organized by financial year'
+		},
+		{
+			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff87c7017d6284956a8ce80d9ceb893c6?format=webp&width=800&height=1200',
+			title: 'Tax Centre - Schedule FA',
+			description: 'Detailed Schedule FA data for Indian tax reporting with all required fields'
+		},
+		{
+			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff71eef4282dc4009b81e051cd742e999?format=webp&width=800&height=1200',
+			title: 'Tax Filing Assistant',
+			description: 'Step-by-step guidance for preparing Schedule FA with country and income details'
+		},
+		{
+			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F7e71c1411bd64f07ab68e317b7ab0db9?format=webp&width=800&height=1200',
+			title: 'Sell Advisor',
+			description: 'Smart recommendations for optimizing tax outcomes when selling your shares'
+		},
+		{
+			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12babee9cf6043bfb764f9e9ec54bd50?format=webp&width=800&height=1200',
+			title: 'Benefits History',
+			description: 'Complete history of RSU grants, vesting schedules, and ESPP purchases'
+		}
+	];
+
+	function nextScreenshot() {
+		activeScreenshot = (activeScreenshot + 1) % screenshots.length;
+	}
+
+	function prevScreenshot() {
+		activeScreenshot = (activeScreenshot - 1 + screenshots.length) % screenshots.length;
+	}
 
 	const features = [
 		{
@@ -167,44 +209,103 @@
 		</div>
 	</section>
 
-	<!-- Screenshots Gallery -->
+	<!-- Interactive Screenshots Viewer -->
 	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
 		<div class="mb-12 text-center sm:mb-16">
 			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Explore the App</h2>
-			<p class="text-gray-600">Complete interface for managing your stock plans</p>
+			<p class="text-gray-600">Click through the key features and interface</p>
 		</div>
 
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			<img
-				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
-				alt="Portfolio View"
-				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
-			/>
-			<img
-				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F22c302b46d874b8b8722f63024cf092b?format=webp&width=800&height=1200"
-				alt="Tax Centre - Capital Gains"
-				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
-			/>
-			<img
-				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff87c7017d6284956a8ce80d9ceb893c6?format=webp&width=800&height=1200"
-				alt="Tax Centre - Schedule FA"
-				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
-			/>
-			<img
-				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff71eef4282dc4009b81e051cd742e999?format=webp&width=800&height=1200"
-				alt="Tax Centre - Schedule FA Form"
-				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
-			/>
-			<img
-				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F7e71c1411bd64f07ab68e317b7ab0db9?format=webp&width=800&height=1200"
-				alt="Sell Advisor"
-				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
-			/>
-			<img
-				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12babee9cf6043bfb764f9e9ec54bd50?format=webp&width=800&height=1200"
-				alt="Benefits History - RSU"
-				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
-			/>
+		<div class="grid gap-8 lg:grid-cols-3">
+			<!-- Main Viewer -->
+			<div class="lg:col-span-2">
+				<div class="rounded-xl border border-gray-200 shadow-xl overflow-hidden bg-gray-900">
+					<img
+						src={screenshots[activeScreenshot].src}
+						alt={screenshots[activeScreenshot].title}
+						class="w-full h-auto"
+					/>
+
+					<!-- Navigation Overlay -->
+					<div class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none lg:relative lg:bg-transparent lg:pointer-events-auto lg:p-0 lg:flex lg:mt-4 lg:gap-3">
+						<button
+							on:click={prevScreenshot}
+							class="pointer-events-auto bg-white hover:bg-gray-100 rounded-lg p-3 shadow-lg transition flex-1 lg:flex-none"
+						>
+							← Previous
+						</button>
+						<button
+							on:click={nextScreenshot}
+							class="pointer-events-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-3 shadow-lg transition flex-1 lg:flex-none"
+						>
+							Next →
+						</button>
+					</div>
+
+					<!-- Slide Counter -->
+					<div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-sm bg-black/50 rounded-lg px-3 py-2 lg:relative lg:justify-center lg:bg-transparent lg:mt-4">
+						<span>{activeScreenshot + 1} of {screenshots.length}</span>
+						<div class="flex gap-1 lg:hidden">
+							{#each screenshots as _, i}
+								<div
+									class="h-1 rounded-full transition-all {i === activeScreenshot
+										? 'bg-blue-500 w-3'
+										: 'bg-gray-500 w-1'}"
+								/>
+							{/each}
+						</div>
+					</div>
+				</div>
+
+				<!-- Thumbnail Gallery -->
+				<div class="mt-6 hidden lg:flex gap-3 overflow-x-auto">
+					{#each screenshots as screenshot, i}
+						<button
+							on:click={() => (activeScreenshot = i)}
+							class="flex-shrink-0 rounded-lg border-2 overflow-hidden transition {i ===
+							activeScreenshot
+								? 'border-blue-600 shadow-md'
+								: 'border-gray-200 hover:border-gray-300'}"
+						>
+							<img
+								src={screenshot.src}
+								alt={screenshot.title}
+								class="w-20 h-28 object-cover"
+							/>
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Info Panel -->
+			<div class="flex flex-col gap-6">
+				<div class="rounded-lg border border-gray-200 bg-white p-6">
+					<h3 class="text-2xl font-bold text-gray-900 mb-3">
+						{screenshots[activeScreenshot].title}
+					</h3>
+					<p class="text-gray-600 leading-relaxed">
+						{screenshots[activeScreenshot].description}
+					</p>
+				</div>
+
+				<!-- Feature Quick Links -->
+				<div class="rounded-lg border border-gray-200 bg-gray-50 p-6">
+					<h4 class="font-semibold text-gray-900 mb-4">All Features</h4>
+					<div class="space-y-2">
+						{#each screenshots as screenshot, i}
+							<button
+								on:click={() => (activeScreenshot = i)}
+								class="w-full text-left px-3 py-2 rounded-lg transition {i ===
+								activeScreenshot
+									? 'bg-blue-600 text-white'
+									: 'text-gray-700 hover:bg-gray-200'}"
+							>
+								{screenshot.title}
+							</button>
+						{/each}
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 
