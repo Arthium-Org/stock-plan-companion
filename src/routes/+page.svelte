@@ -132,17 +132,16 @@
 				</div>
 			</div>
 
-			<!-- Right Placeholder for Screenshots -->
+			<!-- Right Screenshots -->
 			<div class="animate-slide-up">
 				<div
-					class="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-8 shadow-lg"
+					class="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden"
 				>
-					<div class="flex h-96 items-center justify-center text-gray-400">
-						<div class="text-center">
-							<p class="text-sm">App Screenshot</p>
-							<p class="text-xs text-gray-400">Add your application screenshots here</p>
-						</div>
-					</div>
+					<img
+						src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
+						alt="Stock Plan Companion App - Portfolio View"
+						class="w-full h-auto object-cover"
+					/>
 				</div>
 			</div>
 		</div>
@@ -165,6 +164,47 @@
 					<p class="text-sm text-gray-600">{feature.description}</p>
 				</div>
 			{/each}
+		</div>
+	</section>
+
+	<!-- Screenshots Gallery -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="mb-12 text-center sm:mb-16">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Explore the App</h2>
+			<p class="text-gray-600">Complete interface for managing your stock plans</p>
+		</div>
+
+		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			<img
+				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
+				alt="Portfolio View"
+				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
+			/>
+			<img
+				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F22c302b46d874b8b8722f63024cf092b?format=webp&width=800&height=1200"
+				alt="Tax Centre - Capital Gains"
+				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
+			/>
+			<img
+				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff87c7017d6284956a8ce80d9ceb893c6?format=webp&width=800&height=1200"
+				alt="Tax Centre - Schedule FA"
+				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
+			/>
+			<img
+				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff71eef4282dc4009b81e051cd742e999?format=webp&width=800&height=1200"
+				alt="Tax Centre - Schedule FA Form"
+				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
+			/>
+			<img
+				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F7e71c1411bd64f07ab68e317b7ab0db9?format=webp&width=800&height=1200"
+				alt="Sell Advisor"
+				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
+			/>
+			<img
+				src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12babee9cf6043bfb764f9e9ec54bd50?format=webp&width=800&height=1200"
+				alt="Benefits History - RSU"
+				class="rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition h-96 object-cover object-top"
+			/>
 		</div>
 	</section>
 
