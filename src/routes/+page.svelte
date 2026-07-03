@@ -363,6 +363,103 @@
 		</div>
 	</section>
 
+	<!-- Getting Started Section -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="mb-12 text-center sm:mb-16">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Getting Started in 3 Steps</h2>
+			<p class="text-gray-600">Download from E*TRADE and upload to Stock Plan Companion</p>
+		</div>
+
+		<div class="grid gap-8 md:grid-cols-3">
+			<!-- Step 1 -->
+			<div class="flex flex-col">
+				<div
+					class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white"
+				>
+					1
+				</div>
+				<h3 class="mb-3 text-xl font-semibold text-gray-900">Download Holdings</h3>
+				<p class="mb-4 text-gray-600 text-sm leading-relaxed">
+					Log into E*TRADE Stock Plan → Holdings tab → Download → Download Expanded. Save the .xlsx
+					file.
+				</p>
+				<div class="mt-auto rounded-lg bg-gray-50 p-3 border border-gray-200">
+					<p class="text-xs text-gray-600 font-medium">Current portfolio snapshot</p>
+				</div>
+			</div>
+
+			<!-- Step 2 -->
+			<div class="flex flex-col">
+				<div
+					class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white"
+				>
+					2
+				</div>
+				<h3 class="mb-3 text-xl font-semibold text-gray-900">Download Benefit History</h3>
+				<p class="mb-4 text-gray-600 text-sm leading-relaxed">
+					Go to My Account → Benefit History. Click Download → Download Expanded. Save the .xlsx file.
+				</p>
+				<div class="mt-auto rounded-lg bg-gray-50 p-3 border border-gray-200">
+					<p class="text-xs text-gray-600 font-medium">Grants, vests, and sales history</p>
+				</div>
+			</div>
+
+			<!-- Step 3 -->
+			<div class="flex flex-col">
+				<div
+					class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white"
+				>
+					3
+				</div>
+				<h3 class="mb-3 text-xl font-semibold text-gray-900">Download Gains & Losses</h3>
+				<p class="mb-4 text-gray-600 text-sm leading-relaxed">
+					My Account → Gains & Losses. Select tax year, click Apply, then Download → Download
+					Expanded.
+				</p>
+				<div class="mt-auto rounded-lg bg-gray-50 p-3 border border-gray-200">
+					<p class="text-xs text-gray-600 font-medium">Capital gains tax data</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Upload Section -->
+		<div class="mt-12 rounded-xl border border-gray-200 bg-white overflow-hidden shadow-lg">
+			<div class="grid gap-0 lg:grid-cols-2">
+				<!-- Left: Info -->
+				<div class="p-8 flex flex-col justify-center">
+					<h3 class="mb-3 text-2xl font-bold text-gray-900">Upload to Stock Plan Companion</h3>
+					<p class="mb-6 text-gray-600">
+						Open the app and drag & drop your downloaded E*TRADE files. The app validates and
+						organizes everything automatically.
+					</p>
+					<ul class="space-y-3 text-sm text-gray-700">
+						<li class="flex items-start gap-3">
+							<span class="text-blue-600 font-bold">✓</span>
+							<span>Files are validated and parsed in order</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<span class="text-blue-600 font-bold">✓</span>
+							<span>Data stays private on your computer</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<span class="text-blue-600 font-bold">✓</span>
+							<span>Instant access to tax reports and analysis</span>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Right: Screenshot -->
+				<div class="bg-gray-50 p-8 flex items-center justify-center">
+					<img
+						src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F4020280870af4ce3bb40ef90ac8dcbfd?format=webp&width=800&height=1200"
+						alt="Upload Files Interface"
+						class="max-w-full h-auto rounded-lg border border-gray-200 shadow-md"
+					/>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<!-- Why Section -->
 	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
 		<div class="rounded-xl border border-gray-200 bg-blue-50 px-8 py-12 sm:px-12">
