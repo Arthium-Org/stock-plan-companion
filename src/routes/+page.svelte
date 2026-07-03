@@ -1,32 +1,389 @@
-<div
-	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200"
->
-	<div class="text-center">
-		<!-- TODO: replace everything here with the actual app! -->
-		<h1 class="flex items-center justify-center gap-3 text-2xl font-semibold text-slate-800">
-			<svg class="h-8 w-8 animate-spin text-slate-400" viewBox="0 0 50 50">
-				<circle
-					class="opacity-30"
-					cx="25"
-					cy="25"
-					r="20"
-					stroke="currentColor"
-					stroke-width="5"
-					fill="none"
-				/>
-				<circle
-					class="text-slate-600"
-					cx="25"
-					cy="25"
-					r="20"
-					stroke="currentColor"
-					stroke-width="5"
-					fill="none"
-					stroke-dasharray="100"
-					stroke-dashoffset="75"
-				/>
-			</svg>
-			Generating your app...
-		</h1>
-	</div>
+<script lang="ts">
+	import { onMount } from 'svelte';
+
+	let formSubmitted = false;
+	let formLoading = false;
+	let formError = '';
+	let downloadLinks = {
+		mac: '#',
+		windows: '#',
+		linux: '#'
+	};
+
+	async function handleFormSubmit(e: Event) {
+		const form = e.target as HTMLFormElement;
+		const formData = new FormData(form);
+
+		formLoading = true;
+		formError = '';
+
+		try {
+			const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+				method: 'POST',
+				body: formData,
+				headers: {
+					Accept: 'application/json'
+				}
+			});
+
+			if (response.ok) {
+				formSubmitted = true;
+				form.reset();
+				// Simulate showing download links after 1 second
+				setTimeout(() => {
+					downloadLinks = {
+						mac: 'https://github.com/yourusername/stock-plan-companion/releases',
+						windows: 'https://github.com/yourusername/stock-plan-companion/releases',
+						linux: 'https://github.com/yourusername/stock-plan-companion/releases'
+					};
+				}, 1000);
+			} else {
+				formError = 'Failed to submit form. Please try again.';
+			}
+		} catch (error) {
+			formError = 'An error occurred. Please try again.';
+		} finally {
+			formLoading = false;
+		}
+	}
+</script>
+
+<div class="min-h-screen w-full bg-white">
+	<!-- Navigation -->
+	<nav class="border-b border-gray-100">
+		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
+			<div class="flex items-center gap-2">
+				<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+					<span class="text-lg font-bold text-white">📊</span>
+				</div>
+				<span class="text-xl font-semibold text-gray-900">Stock Plan Companion</span>
+			</div>
+			<div class="flex items-center gap-4">
+				<a
+					href="https://github.com"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-gray-600 transition hover:text-gray-900"
+				>
+					GitHub
+				</a>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Hero Section -->
+	<section class="section-container mx-auto max-w-7xl py-12 sm:py-20 lg:py-28">
+		<div class="grid gap-12 lg:grid-cols-2 lg:gap-8">
+			<!-- Left Content -->
+			<div class="flex flex-col justify-center animate-fade-in">
+				<div class="mb-6 inline-flex w-fit rounded-full bg-blue-50 px-4 py-2">
+					<span class="text-sm font-medium text-blue-700">Open source • Desktop app</span>
+				</div>
+
+				<h1 class="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+					Simplify Your E*TRADE Stock Plan Records
+				</h1>
+
+				<p class="mb-8 text-lg text-gray-600 sm:text-xl">
+					An open-source desktop application that helps organize RSU and ESPP records for Indian
+					taxpayers.
+				</p>
+
+				<div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
+					<a href="#register" class="btn-primary"> Register & Download </a>
+					<a
+						href="https://github.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="btn-secondary"
+					>
+						View on GitHub
+					</a>
+				</div>
+			</div>
+
+			<!-- Right Placeholder for Screenshots -->
+			<div class="animate-slide-up">
+				<div
+					class="rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-8 shadow-lg"
+				>
+					<div class="flex h-96 items-center justify-center text-gray-400">
+						<div class="text-center">
+							<p class="text-sm">App Screenshot</p>
+							<p class="text-xs text-gray-400">Add your application screenshots here</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Features Section -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="mb-12 text-center sm:mb-16">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Powerful Features</h2>
+			<p class="text-gray-600">Everything you need to manage your stock plans effortlessly</p>
+		</div>
+
+		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+			{#each features as feature}
+				<div
+					class="rounded-lg border border-gray-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
+				>
+					<div class="mb-4 text-3xl">{feature.icon}</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
+					<p class="text-sm text-gray-600">{feature.description}</p>
+				</div>
+			{/each}
+		</div>
+	</section>
+
+	<!-- Status Section -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="mb-12 text-center sm:mb-16">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Current Status</h2>
+			<p class="text-gray-600">What's available today and what's coming next</p>
+		</div>
+
+		<div class="grid gap-8 lg:grid-cols-2">
+			<div class="rounded-lg border border-green-200 bg-green-50 p-8">
+				<h3 class="mb-6 text-xl font-semibold text-gray-900">Available Today ✓</h3>
+				<ul class="space-y-3">
+					<li class="flex items-start gap-3">
+						<span class="mt-1 text-green-600">✓</span>
+						<span class="text-gray-700">E*TRADE support</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<span class="mt-1 text-green-600">✓</span>
+						<span class="text-gray-700">RSU & ESPP record management</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<span class="mt-1 text-green-600">✓</span>
+						<span class="text-gray-700">Desktop application</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<span class="mt-1 text-green-600">✓</span>
+						<span class="text-gray-700">Open source</span>
+					</li>
+				</ul>
+			</div>
+
+			<div class="rounded-lg border border-gray-200 bg-gray-50 p-8">
+				<h3 class="mb-6 text-xl font-semibold text-gray-900">Coming Soon 🚀</h3>
+				<ul class="space-y-3">
+					<li class="flex items-start gap-3">
+						<span class="text-gray-400">→</span>
+						<span class="text-gray-700">Additional broker support</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<span class="text-gray-400">→</span>
+						<span class="text-gray-700">Dividend income support</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<span class="text-gray-400">→</span>
+						<span class="text-gray-700">Better Schedule FA assistance</span>
+					</li>
+					<li class="flex items-start gap-3">
+						<span class="text-gray-400">→</span>
+						<span class="text-gray-700">More tax reports</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Why Section -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="rounded-xl border border-gray-200 bg-blue-50 px-8 py-12 sm:px-12">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Why This Project?</h2>
+			<p class="max-w-3xl text-lg text-gray-700">
+				Managing RSUs and ESPPs for Indian tax reporting can be time-consuming and complex. This
+				project aims to simplify record keeping and organization. We handle the paperwork so you can
+				focus on what matters.
+			</p>
+			<p class="mt-4 text-sm text-gray-600">
+				<strong>Note:</strong> This is not tax filing software and is not affiliated with E*TRADE or the
+				Income Tax Department. Always consult with a qualified tax professional for your specific tax
+				situation.
+			</p>
+		</div>
+	</section>
+
+	<!-- Registration Section -->
+	<section id="register" class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="mx-auto max-w-2xl text-center">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Get Started Today</h2>
+			<p class="mb-8 text-gray-600">Register to download the latest version</p>
+
+			{#if !formSubmitted}
+				<form on:submit|preventDefault={handleFormSubmit} class="space-y-4">
+					<input
+						type="text"
+						name="name"
+						placeholder="Your name"
+						required
+						class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+					/>
+					<input
+						type="email"
+						name="email"
+						placeholder="Your email"
+						required
+						class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+					/>
+
+					{#if formError}
+						<p class="text-sm text-red-600">{formError}</p>
+					{/if}
+
+					<button
+						type="submit"
+						disabled={formLoading}
+						class="btn-primary w-full disabled:opacity-50"
+					>
+						{formLoading ? 'Registering...' : 'Register & Download'}
+					</button>
+				</form>
+			{:else}
+				<div class="rounded-lg border border-green-200 bg-green-50 p-8">
+					<div class="mb-6 text-center">
+						<p class="mb-2 text-2xl">✓</p>
+						<h3 class="mb-2 text-xl font-semibold text-gray-900">Registration Successful!</h3>
+						<p class="text-gray-600">Download your copy for your platform:</p>
+					</div>
+
+					<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+						<a href={downloadLinks.mac} class="btn-secondary text-center">
+							macOS
+						</a>
+						<a href={downloadLinks.windows} class="btn-secondary text-center">
+							Windows
+						</a>
+						<a href={downloadLinks.linux} class="btn-secondary text-center">
+							Linux
+						</a>
+					</div>
+
+					<button
+						on:click={() => (formSubmitted = false)}
+						class="mt-6 text-sm text-blue-600 hover:text-blue-700"
+					>
+						Register another email
+					</button>
+				</div>
+			{/if}
+		</div>
+	</section>
+
+	<!-- Open Source Section -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="text-center">
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Open Source</h2>
+			<p class="mb-8 text-lg text-gray-600">
+				Stock Plan Companion is hosted on GitHub. Community contributions are welcome!
+			</p>
+			<a
+				href="https://github.com"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn-primary"
+			>
+				Visit GitHub
+			</a>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="border-t border-gray-100 bg-gray-50">
+		<div class="section-container mx-auto max-w-7xl py-12 sm:py-16">
+			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+				<div>
+					<h4 class="mb-4 font-semibold text-gray-900">Product</h4>
+					<ul class="space-y-2">
+						<li>
+							<a href="https://github.com" class="text-sm text-gray-600 hover:text-gray-900">
+								GitHub
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h4 class="mb-4 font-semibold text-gray-900">Legal</h4>
+					<ul class="space-y-2">
+						<li>
+							<a href="#privacy" class="text-sm text-gray-600 hover:text-gray-900">
+								Privacy
+							</a>
+						</li>
+						<li>
+							<a href="#disclaimer" class="text-sm text-gray-600 hover:text-gray-900">
+								Disclaimer
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h4 class="mb-4 font-semibold text-gray-900">Support</h4>
+					<ul class="space-y-2">
+						<li>
+							<a href="mailto:contact@example.com" class="text-sm text-gray-600 hover:text-gray-900">
+								Contact
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h4 class="mb-4 font-semibold text-gray-900">Legal Notice</h4>
+					<p class="text-xs text-gray-600">
+						Not affiliated with E*TRADE or the Income Tax Department.
+					</p>
+				</div>
+			</div>
+
+			<div class="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
+				<p>&copy; 2024 Stock Plan Companion. Open source under MIT License.</p>
+			</div>
+		</div>
+	</footer>
 </div>
+
+<style>
+	:global(html) {
+		scroll-behavior: smooth;
+	}
+</style>
+
+<script context="module" lang="ts">
+	const features = [
+		{
+			icon: '📄',
+			title: 'Import E*TRADE Documents',
+			description: 'Easily import your E*TRADE statements and records'
+		},
+		{
+			icon: '📊',
+			title: 'Track RSUs and ESPPs',
+			description: 'Comprehensive tracking of all your stock holdings'
+		},
+		{
+			icon: '📅',
+			title: 'Vesting & Transaction History',
+			description: 'Organize vesting schedules and transaction records'
+		},
+		{
+			icon: '🧾',
+			title: 'Tax Report Preparation',
+			description: 'Prepare all information needed for tax reporting'
+		},
+		{
+			icon: '💻',
+			title: 'Desktop Application',
+			description: 'Fast, native performance on your machine'
+		},
+		{
+			icon: '🔒',
+			title: 'Privacy First',
+			description: 'Your data stays on your computer. Always.'
+		}
+	];
+</script>
