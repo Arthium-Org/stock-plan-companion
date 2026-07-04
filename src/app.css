@@ -71,4 +71,31 @@
 		pointer-events: none;
 		z-index: 10;
 	}
+
+	/* Sticky Compliance Sidebar */
+	.compliance-sidebar {
+		position: sticky;
+		top: 80px;
+		height: fit-content;
+		max-height: calc(100vh - 100px);
+		overflow-y: auto;
+		padding-right: 0.5rem;
+	}
+
+	.compliance-sidebar::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.compliance-sidebar::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.compliance-sidebar::-webkit-scrollbar-thumb {
+		background: #cbd5e1;
+		border-radius: 3px;
+	}
+
+	.compliance-sidebar::-webkit-scrollbar-thumb:hover {
+		background: #94a3b8;
+	}
 }
