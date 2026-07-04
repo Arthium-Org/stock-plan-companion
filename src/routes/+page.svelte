@@ -186,50 +186,37 @@
 
 	<!-- Hero Section -->
 	<section class="section-container mx-auto max-w-7xl py-12 sm:py-20 lg:py-28">
-		<div class="grid gap-12 lg:grid-cols-2 lg:gap-8">
-			<!-- Left Content -->
-			<div class="flex flex-col justify-center animate-fade-in">
-				<div class="mb-6 inline-flex w-fit rounded-full bg-blue-50 px-4 py-2">
-					<span class="text-sm font-medium text-blue-700">Open source • Desktop app</span>
-				</div>
-
-				<h1 class="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-					Simplify Your E*TRADE Stock Plan Records
-				</h1>
-
-				<p class="mb-8 text-lg text-gray-600 sm:text-xl">
-					An open-source desktop application that helps organize RSU and ESPP records for Indian
-					taxpayers.
-				</p>
-
-				<div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
-					<a href="#register" class="btn-primary"> Register & Download </a>
-					<a
-						href="https://github.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="btn-secondary"
-					>
-						View on GitHub
-					</a>
-				</div>
+		<div class="max-w-3xl">
+			<div class="mb-6 inline-flex w-fit rounded-full bg-blue-50 px-4 py-2">
+				<span class="text-sm font-medium text-blue-700">Open source • Desktop app</span>
 			</div>
 
-			<!-- Right Screenshots -->
-			<div class="animate-slide-up">
-				<div
-					class="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden"
-				>
-					<BlurredScreenshot
-						src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
-						alt="Stock Plan Companion App - Portfolio View"
-						blurRegions={[
-							{ top: '1%', left: '8%', width: '35%', height: '8%' },
-							{ top: '3%', left: '60%', width: '35%', height: '6%' },
-							{ top: '8%', left: '8%', width: '40%', height: '5%' }
-						]}
-					/>
-				</div>
+			<h1 class="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+				Simplify Your E*TRADE Stock Plan Records
+			</h1>
+
+			<p class="mb-8 text-lg text-gray-600 sm:text-xl">
+				An open-source desktop application that helps organize RSU and ESPP records for Indian
+				taxpayers.
+			</p>
+
+			<div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
+				<a href="#register" class="btn-primary"> Register & Download </a>
+			</div>
+		</div>
+
+		<!-- Screenshot below CTA -->
+		<div class="mt-12 animate-slide-up">
+			<div class="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden max-w-2xl">
+				<BlurredScreenshot
+					src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
+					alt="Stock Plan Companion App - Portfolio View"
+					blurRegions={[
+						{ top: '1%', left: '8%', width: '35%', height: '8%' },
+						{ top: '3%', left: '60%', width: '35%', height: '6%' },
+						{ top: '8%', left: '8%', width: '40%', height: '5%' }
+					]}
+				/>
 			</div>
 		</div>
 	</section>
@@ -557,19 +544,8 @@
 										<CheckCircle size={40} class="text-green-600" />
 									</div>
 									<h3 class="mb-2 text-xl font-semibold text-gray-900">Registration Successful!</h3>
-									<p class="text-gray-600">Download your copy for your platform:</p>
-								</div>
-
-								<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
-									<a href={downloadLinks.mac} class="btn-secondary text-center">
-										macOS
-									</a>
-									<a href={downloadLinks.windows} class="btn-secondary text-center">
-										Windows
-									</a>
-									<a href={downloadLinks.linux} class="btn-secondary text-center">
-										Linux
-									</a>
+									<p class="mb-4 text-gray-600">Check your email for the GitHub releases download link.</p>
+									<p class="text-sm text-gray-600">You'll receive download instructions for macOS, Windows, and Linux.</p>
 								</div>
 
 								<button
