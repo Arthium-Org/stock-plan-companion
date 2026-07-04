@@ -594,103 +594,113 @@
 				</section>
 			</div>
 
-			<!-- Right Column: Sticky Compliance Sidebar -->
+			<!-- Right Column: Schedule FA compliance ticker (auto-scrolls, pauses on hover) -->
 			<div class="lg:col-span-1">
-				<div class="compliance-sidebar space-y-6">
-					<!-- Critical Compliance Alert -->
-					<div class="rounded-xl border-2 border-red-300 bg-gradient-to-b from-red-50 to-orange-50 p-6">
-						<div class="flex gap-3">
-							<div class="flex-shrink-0">
-								<AlertTriangle size={28} class="text-red-600 mt-0.5" />
-							</div>
-							<div class="flex-1">
-								<h3 class="mb-2 text-lg font-bold text-red-900">Schedule FA Required</h3>
-								<p class="mb-3 text-sm text-red-800">
-									<strong>November 2025:</strong> IT Department is actively identifying non-disclosure of
-									foreign assets.
-								</p>
-								<p class="mb-3 text-xs text-red-700">
-									<strong>Mandatory if you:</strong>
-								</p>
-								<ul class="mb-3 space-y-1 text-xs text-red-700">
-									<li>• Hold RSUs/ESPPs from US companies</li>
-									<li>• Have foreign bank accounts</li>
-									<li>• Receive foreign income</li>
-								</ul>
-								<p class="mb-4 text-xs font-semibold text-red-900">
-									⚠️ Penalty: Up to 50% + prosecution
-								</p>
-								<div class="space-y-2">
-									<a
-										href="https://www.incometax.gov.in/iec/foportal/nudge/nudge-schedule-fa#video"
-										target="_blank"
-										rel="noopener noreferrer"
-										class="flex items-center justify-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-xs text-white hover:bg-red-700 transition"
-									>
-										<ExternalLink size={14} />
-										IT Guidance
-									</a>
-									<a
-										href="https://economictimes.indiatimes.com/wealth/tax/foreign-income-in-itr-avoid-these-7-disclosure-mistakes-that-can-cost-you-dearly/foreign-tax-credit-why-form-67-and-dtaa-are-important/slideshow/132106260.cms"
-										target="_blank"
-										rel="noopener noreferrer"
-										class="flex items-center justify-center gap-2 rounded-lg border border-red-600 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition"
-									>
-										<ExternalLink size={14} />
-										Avoid Mistakes
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Why It's Hard -->
-					<div class="rounded-lg border border-orange-200 bg-orange-50 p-6">
-						<h4 class="mb-3 font-bold text-orange-900">The Challenge</h4>
-						<p class="text-xs text-orange-800 leading-relaxed mb-3">
-							Schedule FA requires detailed info for each asset: acquisition date, cost, FMV, exchange rates.
-						</p>
-						<p class="text-xs text-orange-800 font-semibold">
-							Manually compiling this across multiple years is error-prone and time-consuming.
-						</p>
-					</div>
-
-					<!-- The Solution -->
-					<div class="rounded-lg border border-green-200 bg-green-50 p-6">
-						<h4 class="mb-3 font-bold text-green-900">The Solution</h4>
-						<div class="flex items-center gap-2 mb-2">
-							<Download size={16} class="text-green-600" />
-							<p class="text-xs font-semibold text-green-800">One-Click CSV Export</p>
-						</div>
-						<p class="text-xs text-green-700">
-							All Schedule FA fields auto-populated from your E*TRADE data.
-						</p>
-					</div>
-
-					<!-- News Article -->
-					<div class="rounded-lg border border-blue-200 bg-blue-50 p-6">
-						<div class="mb-3 inline-flex rounded-full bg-blue-100 px-2 py-1">
-							<span class="text-xs font-bold text-blue-700">In The News</span>
-						</div>
-						<h4 class="mb-2 text-sm font-bold text-blue-900">IT Crackdown on Foreign Assets</h4>
-						<p class="text-xs text-blue-800 mb-3">
-							The Hindu reported IT Department is sending SMS/emails to taxpayers with non-disclosed foreign
-							assets, advising revised ITR filing by December 31.
-						</p>
-						<a
-							href="https://www.thehindu.com/business/Economy/income-tax-department-identifies-cases-of-non-disclosure-of-foreign-assets-in-itrs/article70329849.ece"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-semibold"
-						>
-							Read Article
-							<ExternalLink size={12} />
-						</a>
+				<div class="compliance-ticker">
+					<div class="compliance-ticker-track">
+						<div class="contents">{@render complianceCards()}</div>
+						<div class="hidden lg:contents" aria-hidden="true">{@render complianceCards()}</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	{#snippet complianceCards()}
+		<!-- In the News -->
+		<div class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+			<div class="mb-3 inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1">
+				<span class="text-xs font-semibold uppercase tracking-wide text-blue-700">In the News</span>
+			</div>
+			<h3 class="mb-2 text-base font-semibold text-gray-900">IT crackdown on foreign assets</h3>
+			<p class="mb-4 text-sm leading-relaxed text-gray-600">
+				The Hindu reports the IT Department is notifying taxpayers with non-disclosed foreign assets
+				to file revised ITRs.
+			</p>
+			<a
+				href="https://www.thehindu.com/business/Economy/income-tax-department-identifies-cases-of-non-disclosure-of-foreign-assets-in-itrs/article70329849.ece"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
+			>
+				Read article
+				<ExternalLink size={14} />
+			</a>
+		</div>
+
+		<!-- IT Department alert -->
+		<div class="mb-6 rounded-xl border border-red-200 bg-white p-5 shadow-sm ring-1 ring-red-100">
+			<div class="mb-3 flex items-center gap-2">
+				<AlertTriangle size={20} class="flex-shrink-0 text-red-600" />
+				<h3 class="text-base font-bold text-gray-900">Schedule FA is mandatory</h3>
+			</div>
+			<p class="mb-3 text-sm leading-relaxed text-gray-600">
+				<span class="font-semibold text-gray-900">Nov 2025:</span> the IT Department is actively
+				identifying non-disclosure of foreign assets.
+			</p>
+			<p class="mb-2 text-sm font-semibold text-gray-900">You must file it if you:</p>
+			<ul class="mb-3 space-y-1.5 text-sm text-gray-600">
+				<li class="flex gap-2"><span class="text-red-500">•</span> Hold RSUs/ESPPs from US companies</li>
+				<li class="flex gap-2"><span class="text-red-500">•</span> Have foreign bank accounts</li>
+				<li class="flex gap-2"><span class="text-red-500">•</span> Receive foreign income</li>
+			</ul>
+			<div class="mb-4 rounded-lg bg-red-50 px-3 py-2">
+				<p class="text-xs font-semibold text-red-700">
+					Penalty for non-disclosure: up to 50% + prosecution
+				</p>
+			</div>
+			<div class="flex flex-col gap-2">
+				<a
+					href="https://www.incometax.gov.in/iec/foportal/nudge/nudge-schedule-fa#video"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+				>
+					<ExternalLink size={14} />
+					IT Dept guidance
+				</a>
+				<a
+					href="https://economictimes.indiatimes.com/wealth/tax/foreign-income-in-itr-avoid-these-7-disclosure-mistakes-that-can-cost-you-dearly/foreign-tax-credit-why-form-67-and-dtaa-are-important/slideshow/132106260.cms"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+				>
+					<ExternalLink size={14} />
+					Avoid common mistakes
+				</a>
+			</div>
+		</div>
+
+		<!-- The Challenge -->
+		<div class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+			<div class="mb-3 flex items-center gap-2">
+				<FileText size={20} class="flex-shrink-0 text-gray-500" />
+				<h3 class="text-base font-semibold text-gray-900">The challenge</h3>
+			</div>
+			<p class="mb-3 text-sm leading-relaxed text-gray-600">
+				Schedule FA requires detailed data for each asset — acquisition date, cost, fair market
+				value, and exchange rates.
+			</p>
+			<p class="text-sm font-medium text-gray-900">
+				Compiling this by hand across multiple years is error-prone and time-consuming.
+			</p>
+		</div>
+
+		<!-- The Solution -->
+		<div class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+			<div class="mb-3 flex items-center gap-2">
+				<CheckCircle size={20} class="flex-shrink-0 text-green-600" />
+				<h3 class="text-base font-semibold text-gray-900">The solution</h3>
+			</div>
+			<div class="mb-2 flex items-center gap-2">
+				<Download size={16} class="flex-shrink-0 text-blue-600" />
+				<p class="text-sm font-semibold text-gray-900">One-click CSV export</p>
+			</div>
+			<p class="text-sm leading-relaxed text-gray-600">
+				Every Schedule FA field auto-populated from your E*TRADE data.
+			</p>
+		</div>
+	{/snippet}
 
 	<!-- Footer -->
 	<footer class="border-t border-gray-100 bg-gray-50">
