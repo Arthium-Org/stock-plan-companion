@@ -7,7 +7,10 @@
 		Laptop,
 		Lock,
 		BarChart2,
-		CheckCircle
+		CheckCircle,
+		AlertTriangle,
+		Download,
+		ExternalLink
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
 
@@ -89,6 +92,12 @@
 
 	const features = [
 		{
+			icon: Download,
+			title: 'Schedule FA CSV Export',
+			description: 'One-click export of all required Schedule FA fields—acquisition dates, costs, FMV, exchange rates',
+			highlight: true
+		},
+		{
 			icon: FileText,
 			title: 'Import E*TRADE Documents',
 			description: 'Easily import your E*TRADE statements and records'
@@ -105,18 +114,13 @@
 		},
 		{
 			icon: FileCheck,
-			title: 'Tax Report Preparation',
-			description: 'Prepare all information needed for tax reporting'
-		},
-		{
-			icon: Laptop,
-			title: 'Desktop Application',
-			description: 'Fast, native performance on your machine'
+			title: 'Capital Gains & Tax Reports',
+			description: 'Complete tax documents for Schedule FA, capital gains, and foreign income reporting'
 		},
 		{
 			icon: Lock,
-			title: 'Privacy First',
-			description: 'Your data stays on your computer. Always.'
+			title: 'Privacy First - No Cloud',
+			description: 'Your sensitive data stays on your computer. No uploads, no cloud storage.'
 		}
 	];
 
@@ -230,23 +234,193 @@
 		</div>
 	</section>
 
+	<!-- Critical Compliance Alert -->
+	<section class="section-container mx-auto max-w-7xl py-12 sm:py-16">
+		<div class="rounded-xl border-2 border-red-300 bg-gradient-to-r from-red-50 to-orange-50 p-8 sm:p-12">
+			<div class="flex gap-4">
+				<div class="flex-shrink-0">
+					<AlertTriangle size={32} class="text-red-600 mt-1" />
+				</div>
+				<div class="flex-1">
+					<h2 class="mb-3 text-2xl font-bold text-red-900">Schedule FA: Critical Compliance Required</h2>
+					<p class="mb-4 text-lg text-red-800">
+						<strong>November 2025:</strong> The Income Tax Department is actively identifying and
+						sending SMS/emails to taxpayers with non-disclosed foreign assets in their ITRs.
+					</p>
+					<p class="mb-6 text-red-700">
+						Schedule FA (Foreign Assets) is <strong>mandatory</strong> if you:
+					</p>
+					<ul class="mb-6 space-y-2 text-red-700">
+						<li class="flex items-start gap-3">
+							<span class="font-bold">•</span>
+							<span>Hold RSUs, ESPPs, or stock options from US-based companies</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<span class="font-bold">•</span>
+							<span>Have foreign bank accounts or investments</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<span class="font-bold">•</span>
+							<span>Receive foreign income (capital gains, dividends, etc.)</span>
+						</li>
+					</ul>
+					<p class="mb-4 font-semibold text-red-900">
+						⚠️ Penalty: Up to 50% of tax amount + criminal prosecution for deliberate non-disclosure
+					</p>
+					<div class="flex flex-col gap-3 sm:flex-row">
+						<a
+							href="https://www.incometax.gov.in/iec/foportal/nudge/nudge-schedule-fa#video"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 transition"
+						>
+							<ExternalLink size={18} />
+							View Official IT Guidance
+						</a>
+						<a
+							href="https://economictimes.indiatimes.com/wealth/tax/foreign-income-in-itr-avoid-these-7-disclosure-mistakes-that-can-cost-you-dearly/foreign-tax-credit-why-form-67-and-dtaa-are-important/slideshow/132106260.cms"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 rounded-lg border-2 border-red-600 px-4 py-2 text-red-600 hover:bg-red-50 transition"
+						>
+							<ExternalLink size={18} />
+							Common Mistakes to Avoid
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Problem: Schedule FA Complexity -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="grid gap-12 lg:grid-cols-2 lg:gap-8">
+			<!-- Left: The Problem -->
+			<div class="flex flex-col justify-center">
+				<h2 class="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">
+					Why Schedule FA is So Hard
+				</h2>
+				<p class="mb-6 text-lg text-gray-600">
+					Schedule FA requires detailed information about each foreign asset—acquisition date, cost,
+					FMV, exchange rates. Manually compiling this for RSUs and ESPPs across multiple years is
+					<strong>laborious and error-prone</strong>.
+				</p>
+				<div class="space-y-4">
+					<div class="rounded-lg border border-orange-200 bg-orange-50 p-4">
+						<p class="font-semibold text-orange-900">❌ Manual Approach</p>
+						<p class="mt-2 text-sm text-orange-800">
+							Hunting through E*TRADE statements, Excel sheets, currency rates—hours of work prone to
+							calculation errors
+						</p>
+					</div>
+					<div class="rounded-lg border border-green-200 bg-green-50 p-4">
+						<p class="font-semibold text-green-900">✓ Stock Plan Companion</p>
+						<p class="mt-2 text-sm text-green-800">
+							One-click CSV export ready for Schedule FA—complete, accurate, audit-proof
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right: The Solution Screenshot -->
+			<div class="flex items-center justify-center">
+				<BlurredScreenshot
+					src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F4020280870af4ce3bb40ef90ac8dcbfd?format=webp&width=800&height=1200"
+					alt="Schedule FA CSV Export - One Click"
+					blurRegions={[
+						{ top: '8%', left: '10%', width: '80%', height: '12%' },
+						{ top: '25%', left: '10%', width: '80%', height: '50%' }
+					]}
+				/>
+			</div>
+		</div>
+	</section>
+
+	<!-- IT Department Article -->
+	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
+		<div class="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+			<div class="grid gap-0 lg:grid-cols-2">
+				<!-- Article Image -->
+				<div class="bg-gray-100 p-8 flex items-center justify-center">
+					<img
+						src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12eb39b5bb7a4884a1489f79eb6b09a6?format=webp&width=800&height=1200"
+						alt="Income Tax Department Identifies Cases of Non-Disclosure"
+						class="max-w-full h-auto"
+					/>
+				</div>
+
+				<!-- Article Summary -->
+				<div class="p-8 lg:p-12 flex flex-col justify-center">
+					<div class="mb-4 inline-flex w-fit rounded-full bg-red-100 px-3 py-1">
+						<span class="text-sm font-semibold text-red-700">Official Warning - November 2025</span>
+					</div>
+					<h3 class="mb-4 text-2xl font-bold text-gray-900">
+						IT Department Crackdown on Foreign Asset Non-Disclosure
+					</h3>
+					<p class="mb-6 text-gray-700 leading-relaxed">
+						<strong>The Income Tax Department is actively identifying cases of non-disclosure of
+						foreign assets in ITRs.</strong> Starting November 28, 2025, taxpayers will receive SMS
+						and emails advising them to file revised returns by December 31 to avoid penalty
+						consequences.
+					</p>
+					<div class="mb-6 space-y-3">
+						<div class="flex items-start gap-3">
+							<AlertTriangle size={20} class="mt-0.5 text-red-600 flex-shrink-0" />
+							<div>
+								<p class="font-semibold text-gray-900">Penalty Consequences</p>
+								<p class="text-sm text-gray-600">Up to 50% of tax on undisclosed income + prosecution</p>
+							</div>
+						</div>
+						<div class="flex items-start gap-3">
+							<FileCheck size={20} class="mt-0.5 text-blue-600 flex-shrink-0" />
+							<div>
+								<p class="font-semibold text-gray-900">Mandatory Schedule FA</p>
+								<p class="text-sm text-gray-600">All foreign assets must be disclosed with details</p>
+							</div>
+						</div>
+					</div>
+					<a
+						href="https://www.thehindu.com/business/Economy/income-tax-department-identifies-cases-of-non-disclosure-of-foreign-assets-in-itrs/article70329849.ece"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold"
+					>
+						Read Full Article on The Hindu
+						<ExternalLink size={18} />
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<!-- Features Section -->
 	<section class="section-container mx-auto max-w-7xl py-16 sm:py-24">
 		<div class="mb-12 text-center sm:mb-16">
-			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Powerful Features</h2>
-			<p class="text-gray-600">Everything you need to manage your stock plans effortlessly</p>
+			<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">How It Works</h2>
+			<p class="text-gray-600">Everything you need for Schedule FA compliance and tax reporting</p>
 		</div>
 
 		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-			{#each features as feature}
+			{#each features as feature, i}
 				<div
-					class="rounded-lg border border-gray-200 bg-white p-6 transition hover:border-blue-200 hover:shadow-md"
+					class="rounded-lg border-2 bg-white p-6 transition {feature.highlight
+						? 'border-red-500 shadow-lg ring-2 ring-red-100 lg:col-span-3'
+						: 'border-gray-200 hover:border-blue-200 hover:shadow-md'}"
 				>
-					<div class="mb-4 text-blue-600">
-						<svelte:component this={feature.icon} size={32} />
+					<div class="flex items-start gap-4">
+						<div class="flex-shrink-0 text-blue-600">
+							<svelte:component this={feature.icon} size={32} />
+						</div>
+						<div class="flex-1">
+							{#if feature.highlight}
+								<div class="mb-2 inline-flex rounded-full bg-red-100 px-3 py-1">
+									<span class="text-xs font-bold text-red-700">PRIMARY FEATURE</span>
+								</div>
+							{/if}
+							<h3 class="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
+							<p class="text-sm text-gray-600">{feature.description}</p>
+						</div>
 					</div>
-					<h3 class="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
-					<p class="text-sm text-gray-600">{feature.description}</p>
 				</div>
 			{/each}
 		</div>
