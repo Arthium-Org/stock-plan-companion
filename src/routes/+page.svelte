@@ -223,22 +223,23 @@
 
 	<!-- Main Content with Sticky Sidebar -->
 	<div class="section-container mx-auto max-w-7xl py-12 sm:py-16">
-		<div class="grid gap-8 lg:grid-cols-3">
+		<div class="grid gap-8 lg:grid-cols-3 relative">
 			<!-- Left Column: Main Content -->
-			<div class="lg:col-span-2 space-y-16">
+			<div class="lg:col-span-2 space-y-16 content-area">
 				<!-- Features Section -->
-				<section>
+				<section class="relative z-0">
 					<div class="mb-12 text-center sm:mb-16">
 						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">How It Works</h2>
 						<p class="text-gray-600">Everything you need for Schedule FA compliance and tax reporting</p>
 					</div>
 
-					<div class="grid gap-8 sm:grid-cols-2">
+					<div class="grid gap-8 sm:grid-cols-2 auto-rows-max">
 						{#each features as feature, i}
 							<div
 								class="rounded-lg border-2 bg-white p-6 transition {feature.highlight
 									? 'border-red-500 shadow-lg ring-2 ring-red-100 sm:col-span-2'
 									: 'border-gray-200 hover:border-blue-200 hover:shadow-md'}"
+								style="z-index: {feature.highlight ? 0 : 1};"
 							>
 								<div class="flex items-start gap-4">
 									<div class="flex-shrink-0 text-blue-600">

@@ -80,6 +80,7 @@
 		max-height: calc(100vh - 100px);
 		overflow-y: auto;
 		padding-right: 0.5rem;
+		z-index: 1;
 	}
 
 	.compliance-sidebar::-webkit-scrollbar {
@@ -97,5 +98,11 @@
 
 	.compliance-sidebar::-webkit-scrollbar-thumb:hover {
 		background: #94a3b8;
+	}
+
+	/* Main content area */
+	.content-area {
+		position: relative;
+		z-index: 0;
 	}
 }
