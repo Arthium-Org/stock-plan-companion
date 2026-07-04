@@ -17,8 +17,7 @@
 	let activeScreenshot = 0;
 	let downloadLinks = {
 		mac: '#',
-		windows: '#',
-		linux: '#'
+		windows: '#'
 	};
 
 	const screenshots = [
@@ -128,7 +127,7 @@
 		formError = '';
 
 		try {
-			const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+			const response = await fetch('https://formspree.io/f/xvzjdkaj', {
 				method: 'POST',
 				body: formData,
 				headers: {
@@ -139,13 +138,12 @@
 			if (response.ok) {
 				formSubmitted = true;
 				form.reset();
-				setTimeout(() => {
-					downloadLinks = {
-						mac: 'https://github.com/yourusername/stock-plan-companion/releases',
-						windows: 'https://github.com/yourusername/stock-plan-companion/releases',
-						linux: 'https://github.com/yourusername/stock-plan-companion/releases'
-					};
-				}, 1000);
+				// TODO: update these direct-download URLs on EVERY release (new tag + filename).
+				// Format: https://github.com/Arthium-Org/stock-plan-companion/releases/download/<tag>/<file>
+				downloadLinks = {
+					mac: 'https://github.com/Arthium-Org/stock-plan-companion/releases/download/v1.0.0/StockPlanCompanion-1.0.0.dmg',
+					windows: 'https://github.com/Arthium-Org/stock-plan-companion/releases/download/v1.0.0/StockPlanCompanion-1.0.0.exe'
+				};
 			} else {
 				formError = 'Failed to submit form. Please try again.';
 			}
@@ -169,7 +167,7 @@
 			</div>
 			<div class="flex items-center gap-4">
 				<a
-					href="https://github.com"
+					href="https://github.com/Arthium-Org/stock-plan-companion"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="text-gray-600 transition hover:text-gray-900"
@@ -201,7 +199,7 @@
 				<div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
 					<a href="#register" class="btn-primary"> Register & Download </a>
 					<a
-						href="https://github.com"
+						href="https://github.com/Arthium-Org/stock-plan-companion"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="btn-secondary"
@@ -542,8 +540,7 @@
 					<input
 						type="text"
 						name="name"
-						placeholder="Your name"
-						required
+						placeholder="Your name (optional)"
 						class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
 					/>
 					<input
@@ -553,6 +550,16 @@
 						required
 						class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
 					/>
+
+					<label class="flex items-start gap-2 text-left text-sm text-gray-600">
+						<input
+							type="checkbox"
+							name="consent"
+							required
+							class="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+						/>
+						<span>Email me about new releases and updates.</span>
+					</label>
 
 					{#if formError}
 						<p class="text-sm text-red-600">{formError}</p>
@@ -577,15 +584,14 @@
 					</div>
 
 					<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
-						<a href={downloadLinks.mac} class="btn-secondary text-center">
-							macOS
+						<a href={downloadLinks.mac} download class="btn-secondary text-center">
+							Download for macOS
 						</a>
-						<a href={downloadLinks.windows} class="btn-secondary text-center">
-							Windows
+						<!-- TODO: enable once the Windows .exe is released (tomorrow)
+						<a href={downloadLinks.windows} download class="btn-secondary text-center">
+							Download for Windows
 						</a>
-						<a href={downloadLinks.linux} class="btn-secondary text-center">
-							Linux
-						</a>
+						-->
 					</div>
 
 					<button
@@ -607,7 +613,7 @@
 				Stock Plan Companion is hosted on GitHub. Community contributions are welcome!
 			</p>
 			<a
-				href="https://github.com"
+				href="https://github.com/Arthium-Org/stock-plan-companion"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="btn-primary"
@@ -620,28 +626,13 @@
 	<!-- Footer -->
 	<footer class="border-t border-gray-100 bg-gray-50">
 		<div class="section-container mx-auto max-w-7xl py-12 sm:py-16">
-			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 				<div>
 					<h4 class="mb-4 font-semibold text-gray-900">Product</h4>
 					<ul class="space-y-2">
 						<li>
-							<a href="https://github.com" class="text-sm text-gray-600 hover:text-gray-900">
+							<a href="https://github.com/Arthium-Org/stock-plan-companion" class="text-sm text-gray-600 hover:text-gray-900">
 								GitHub
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<h4 class="mb-4 font-semibold text-gray-900">Legal</h4>
-					<ul class="space-y-2">
-						<li>
-							<a href="#privacy" class="text-sm text-gray-600 hover:text-gray-900">
-								Privacy
-							</a>
-						</li>
-						<li>
-							<a href="#disclaimer" class="text-sm text-gray-600 hover:text-gray-900">
-								Disclaimer
 							</a>
 						</li>
 					</ul>
@@ -650,7 +641,7 @@
 					<h4 class="mb-4 font-semibold text-gray-900">Support</h4>
 					<ul class="space-y-2">
 						<li>
-							<a href="mailto:contact@example.com" class="text-sm text-gray-600 hover:text-gray-900">
+							<a href="mailto:kvakatidev@gmail.com" class="text-sm text-gray-600 hover:text-gray-900">
 								Contact
 							</a>
 						</li>
@@ -665,7 +656,7 @@
 			</div>
 
 			<div class="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-				<p>&copy; 2024 Stock Plan Companion. Open source under MIT License.</p>
+				<p>&copy; 2026 Stock Plan Companion. Open source under MIT License.</p>
 			</div>
 		</div>
 	</footer>
