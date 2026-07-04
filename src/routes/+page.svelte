@@ -13,6 +13,53 @@
 		ExternalLink
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
+	import { onMount } from 'svelte';
+
+	// Auto-scrolling compliance ticker: native scroll so users can wheel/click;
+	// pauses on hover or keyboard focus, seamless loop via duplicated content.
+	let tickerEl: HTMLElement;
+
+	onMount(() => {
+		const el = tickerEl;
+		if (!el) return;
+
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const desktop = window.matchMedia('(min-width: 1024px)');
+		let paused = false;
+		let target = 0;
+		let last = performance.now();
+		let raf = 0;
+
+		function frame(now: number) {
+			const dt = now - last;
+			last = now;
+			const half = el.scrollHeight / 2; // one copy of the card set
+			if (paused || reduceMotion.matches || !desktop.matches || half <= 0) {
+				target = el.scrollTop; // stay in sync while the user is in control
+			} else {
+				target += (30 * dt) / 1000; // ~30px per second
+				if (target >= half) target -= half;
+				el.scrollTop = target;
+			}
+			raf = requestAnimationFrame(frame);
+		}
+		raf = requestAnimationFrame(frame);
+
+		const pause = () => (paused = true);
+		const resume = () => (paused = false);
+		el.addEventListener('mouseenter', pause);
+		el.addEventListener('mouseleave', resume);
+		el.addEventListener('focusin', pause);
+		el.addEventListener('focusout', resume);
+
+		return () => {
+			cancelAnimationFrame(raf);
+			el.removeEventListener('mouseenter', pause);
+			el.removeEventListener('mouseleave', resume);
+			el.removeEventListener('focusin', pause);
+			el.removeEventListener('focusout', resume);
+		};
+	});
 
 	let formSubmitted = false;
 	let formLoading = false;
@@ -596,7 +643,7 @@
 
 			<!-- Right Column: Schedule FA compliance ticker (auto-scrolls, pauses on hover) -->
 			<div class="lg:col-span-1">
-				<div class="compliance-ticker">
+				<div class="compliance-ticker" bind:this={tickerEl}>
 					<div class="compliance-ticker-track">
 						<div class="contents">{@render complianceCards()}</div>
 						<div class="hidden lg:contents" aria-hidden="true">{@render complianceCards()}</div>

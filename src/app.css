@@ -72,7 +72,7 @@
 		z-index: 10;
 	}
 
-	/* Auto-scrolling compliance ticker */
+	/* Auto-scrolling compliance ticker (JS-driven native scroll; hover/focus pauses it) */
 	.compliance-ticker-track {
 		display: flex;
 		flex-direction: column;
@@ -83,7 +83,10 @@
 			position: sticky;
 			top: 6rem;
 			height: calc(100vh - 8rem);
-			overflow: hidden;
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			scrollbar-width: none; /* Firefox */
+			-ms-overflow-style: none; /* IE/Edge */
 			z-index: 1;
 			-webkit-mask-image: linear-gradient(
 				to bottom,
@@ -95,35 +98,8 @@
 			mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
 		}
 
-		.compliance-ticker-track {
-			animation: compliance-scroll 45s linear infinite;
-			will-change: transform;
-		}
-
-		.compliance-ticker:hover .compliance-ticker-track {
-			animation-play-state: paused;
-		}
-	}
-
-	@keyframes compliance-scroll {
-		from {
-			transform: translateY(0);
-		}
-		to {
-			transform: translateY(-50%);
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.compliance-ticker {
-			height: auto !important;
-			overflow: visible !important;
-			-webkit-mask-image: none !important;
-			mask-image: none !important;
-		}
-
-		.compliance-ticker-track {
-			animation: none !important;
+		.compliance-ticker::-webkit-scrollbar {
+			display: none; /* Chrome/Safari */
 		}
 	}
 
