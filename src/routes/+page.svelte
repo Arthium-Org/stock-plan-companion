@@ -231,9 +231,9 @@
 
 	<!-- Hero + Main Content with Sticky Compliance Sidebar -->
 	<div class="section-container mx-auto max-w-7xl py-12 sm:py-16 lg:py-20">
-		<div class="grid gap-8 lg:grid-cols-3 lg:gap-12 relative">
-			<!-- Left Column: Hero + Main Content -->
-			<div class="lg:col-span-2 space-y-16 content-area">
+		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12 relative">
+			<!-- Hero (left column, row 1 on desktop) -->
+			<div class="min-w-0 lg:col-span-2 lg:col-start-1 lg:row-start-1">
 				<!-- Hero -->
 				<section class="animate-fade-in">
 					<div class="mb-6 inline-flex w-fit rounded-full bg-blue-50 px-4 py-2">
@@ -268,7 +268,21 @@
 						</div>
 					</div>
 				</section>
+			</div>
 
+			<!-- Compliance ticker: right column spanning both rows on desktop;
+			     stacks directly under the hero on mobile -->
+			<div class="min-w-0 lg:col-start-3 lg:row-start-1 lg:row-span-2">
+				<div class="compliance-ticker" bind:this={tickerEl}>
+					<div class="compliance-ticker-track">
+						<div class="contents">{@render complianceCards()}</div>
+						<div class="hidden lg:contents" aria-hidden="true">{@render complianceCards()}</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Main content (left column, row 2 on desktop) -->
+			<div class="min-w-0 space-y-16 content-area lg:col-span-2 lg:col-start-1 lg:row-start-2">
 				<!-- Features Section -->
 				<section class="relative z-0">
 					<div class="mb-12 text-center sm:mb-16">
@@ -641,15 +655,6 @@
 				</section>
 			</div>
 
-			<!-- Right Column: Schedule FA compliance ticker (auto-scrolls, pauses on hover) -->
-			<div class="lg:col-span-1">
-				<div class="compliance-ticker" bind:this={tickerEl}>
-					<div class="compliance-ticker-track">
-						<div class="contents">{@render complianceCards()}</div>
-						<div class="hidden lg:contents" aria-hidden="true">{@render complianceCards()}</div>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 
