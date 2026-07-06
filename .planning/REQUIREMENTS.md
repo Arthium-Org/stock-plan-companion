@@ -16,9 +16,9 @@ Launch-polish scope. Each maps to a roadmap phase.
 
 ### Registration
 
-- [ ] **REG-01**: Visitor can submit their email through the existing inline registration form
+- [x] **REG-01**: Visitor can submit their email through the existing inline registration form
 - [x] **REG-02**: Each submission is recorded to a Google Sheet via a Google Apps Script endpoint (no monthly submission cap)
-- [ ] **REG-03**: On successful submission, the download options are revealed (existing behavior preserved)
+- [x] **REG-03**: On successful submission, the download options are revealed (existing behavior preserved)
 - [x] **REG-04**: A failed submission shows an inline error without discarding the entered email (existing behavior preserved)
 
 ### Links & Contact
@@ -58,9 +58,9 @@ Deferred to a future cycle.
 | DL-02 | Phase 1 | Complete |
 | DL-03 | Phase 1 | Complete |
 | DL-04 | Phase 1 | Complete |
-| REG-01 | Phase 2 | Pending |
+| REG-01 | Phase 2 | Complete |
 | REG-02 | Phase 2 | Complete |
-| REG-03 | Phase 2 | Pending |
+| REG-03 | Phase 2 | Complete |
 | REG-04 | Phase 2 | Complete |
 | LINK-01 | Phase 3 | Pending |
 | LINK-02 | Phase 3 | Pending |
