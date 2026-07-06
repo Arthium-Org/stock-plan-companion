@@ -49,7 +49,11 @@ This milestone takes the existing, already-built arthium.org marketing site from
   3. On successful submission, the download options reveal in place exactly as before.
   4. If submission fails (network/script error), the form shows an inline error and keeps the typed email instead of clearing the field.
 
-**Plans**: TBD
+**Plans**: 2 plans
+
+- [ ] 02-01-PLAN.md — Endpoint config module + both registration forms wired to Apps Script (test → wire `/` → wire `/new-12345`)
+- [ ] 02-02-PLAN.md — Clean-cutover gate + live end-to-end verification of capture & failure handling
+
 **UI hint**: yes
 
 ### Phase 3: Links, Contact & CTA Cleanup
@@ -76,5 +80,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|-----------------|--------|-----------|
 | 1. Download Wiring & Release Config | 1/1 | Complete   | 2026-07-06 |
-| 2. Registration Backend Migration | 0/TBD | Not started | - |
+| 2. Registration Backend Migration | 0/2 | Not started | - |
 | 3. Links, Contact & CTA Cleanup | 0/TBD | Not started | - |
