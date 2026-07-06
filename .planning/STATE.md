@@ -7,8 +7,8 @@ current_phase_name: Links, Contact & CTA Cleanup
 status: executing
 stopped_at: Phase 2 context gathered
 last_updated: "2026-07-06T18:09:52.226Z"
-last_activity: 2026-07-06
-last_activity_desc: Phase 02 complete, transitioned to Phase 3
+last_activity: 2026-07-07
+last_activity_desc: "Quick task 260707-05y — promoted dark landing page (with light/dark switch) to /"
 progress:
   total_phases: 3
   completed_phases: 2
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-07-06)
 Phase: 3 — Links, Contact & CTA Cleanup
 Plan: Not started
 Status: Ready to execute
-Last activity: 2026-07-06 — Phase 02 complete, transitioned to Phase 3
+Last activity: 2026-07-07 — Quick task 260707-05y: promoted dark landing page to / (removed /new-12345)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -81,6 +81,12 @@ None yet.
 ### Blockers/Concerns
 
 None yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260707-05y | Promote dark-themed landing page (with light/dark switch) to main / route; remove /new-12345; fix registration source to / and default consent checkbox on | 2026-07-07 | 43a8bdc | [260707-05y-promote-dark-themed-landing-page-with-li](./quick/260707-05y-promote-dark-themed-landing-page-with-li/) |
 
 ## Deferred Items
 
