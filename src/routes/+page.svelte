@@ -18,7 +18,7 @@
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
 	import { appsScriptUrl } from '$lib/registration';
-	import { macDownloadUrl, windowsAvailable } from '$lib/downloads';
+	import { macDownloadUrl, repoUrl, windowsAvailable } from '$lib/downloads';
 	import { onMount } from 'svelte';
 
 	// Theme is scoped to this page's wrapper (.spc-v2) so it never touches the
@@ -246,15 +246,11 @@
 				<span class="text-lg font-semibold tracking-tight t-strong">Stock Plan Companion</span>
 			</div>
 			<div class="flex items-center gap-2 sm:gap-3">
-				<a
-					href="https://github.com/Arthium-Org/stock-plan-companion"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="icon-btn"
-					aria-label="GitHub"
-				>
+				<!-- eslint-disable svelte/no-navigation-without-resolve -- repoUrl is an external GitHub repo URL, not an internal SvelteKit route, so resolve() does not apply -->
+				<a href={repoUrl} target="_blank" rel="noopener noreferrer" class="icon-btn" aria-label="GitHub">
 					<Code2 size={18} />
 				</a>
+				<!-- eslint-enable svelte/no-navigation-without-resolve -->
 				<button on:click={toggleTheme} class="icon-btn" aria-label="Toggle color theme">
 					{#if theme === 'dark'}
 						<Sun size={18} />
@@ -299,15 +295,6 @@
 						<a href="#register" class="btn-primary">
 							Register & Download
 							<ArrowRight size={18} />
-						</a>
-						<a
-							href="https://github.com/Arthium-Org/stock-plan-companion"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="btn-secondary"
-						>
-							<Code2 size={18} />
-							View on GitHub
 						</a>
 					</div>
 
@@ -663,18 +650,9 @@
 				<section>
 					<div class="text-center">
 						<h2 class="mb-4 text-3xl font-bold tracking-tight t-strong sm:text-4xl">Open source</h2>
-						<p class="mx-auto mb-8 max-w-lg text-lg t-muted">
+						<p class="mx-auto max-w-lg text-lg t-muted">
 							Stock Plan Companion is hosted on GitHub. Community contributions are welcome!
 						</p>
-						<a
-							href="https://github.com/Arthium-Org/stock-plan-companion"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="btn-primary"
-						>
-							<Code2 size={18} />
-							Visit GitHub
-						</a>
 					</div>
 				</section>
 			</div>
@@ -795,19 +773,18 @@
 				<div>
 					<h4 class="mb-4 font-semibold t-strong">Product</h4>
 					<ul class="space-y-2">
+						<!-- eslint-disable svelte/no-navigation-without-resolve -- repoUrl is an external GitHub repo URL, not an internal SvelteKit route, so resolve() does not apply -->
 						<li>
-							<a
-								href="https://github.com/Arthium-Org/stock-plan-companion"
-								class="text-sm t-muted transition hover:t-accent">GitHub</a
-							>
+							<a href={repoUrl} class="text-sm t-muted transition hover:t-accent">GitHub</a>
 						</li>
+						<!-- eslint-enable svelte/no-navigation-without-resolve -->
 					</ul>
 				</div>
 				<div>
 					<h4 class="mb-4 font-semibold t-strong">Support</h4>
 					<ul class="space-y-2">
 						<li>
-							<a href="mailto:kvakatidev@gmail.com" class="text-sm t-muted transition hover:t-accent"
+							<a href="mailto:contact@arthium.org" class="text-sm t-muted transition hover:t-accent"
 								>Contact</a
 							>
 						</li>
