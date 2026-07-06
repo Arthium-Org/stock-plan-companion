@@ -12,7 +12,7 @@ This milestone takes the existing, already-built arthium.org marketing site from
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 1: Download Wiring & Release Config** - A registered visitor downloads the correct, signed macOS build from the right repo; Windows shows a safe placeholder; future releases need only a config edit (completed 2026-07-06)
-- [ ] **Phase 2: Registration Backend Migration** - Every registration is captured via Google Apps Script → Google Sheet with no monthly cap, preserving the existing form UX
+- [x] **Phase 2: Registration Backend Migration** - Every registration is captured via Google Apps Script → Google Sheet with no monthly cap, preserving the existing form UX (completed 2026-07-06)
 - [ ] **Phase 3: Links, Contact & CTA Cleanup** - All outbound links and contact info point to production destinations; the duplicate GitHub CTA is gone, leaving one quiet footer link
 
 ## Phase Details
@@ -49,14 +49,14 @@ This milestone takes the existing, already-built arthium.org marketing site from
   3. On successful submission, the download options reveal in place exactly as before.
   4. If submission fails (network/script error), the form shows an inline error and keeps the typed email instead of clearing the field.
 
-**Plans**: 1/2 plans executed
+**Plans**: 2/2 plans complete
 **Wave 1**
 
 - [x] 02-01-PLAN.md — Endpoint config module + both registration forms wired to Apps Script (test → wire `/` → wire `/new-12345`)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 02-02-PLAN.md — Clean-cutover gate + live end-to-end verification of capture & failure handling
+- [x] 02-02-PLAN.md — Clean-cutover gate + live end-to-end verification of capture & failure handling
 
 **UI hint**: yes
 
@@ -84,5 +84,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|-----------------|--------|-----------|
 | 1. Download Wiring & Release Config | 1/1 | Complete   | 2026-07-06 |
-| 2. Registration Backend Migration | 1/2 | In Progress|  |
+| 2. Registration Backend Migration | 2/2 | Complete   | 2026-07-06 |
 | 3. Links, Contact & CTA Cleanup | 0/TBD | Not started | - |
