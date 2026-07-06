@@ -563,6 +563,7 @@
 									<input
 										type="checkbox"
 										name="consent"
+										checked
 										required
 										class="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 									/>
