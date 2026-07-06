@@ -50,8 +50,12 @@ This milestone takes the existing, already-built arthium.org marketing site from
   4. If submission fails (network/script error), the form shows an inline error and keeps the typed email instead of clearing the field.
 
 **Plans**: 2 plans
+**Wave 1**
 
 - [ ] 02-01-PLAN.md — Endpoint config module + both registration forms wired to Apps Script (test → wire `/` → wire `/new-12345`)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 02-02-PLAN.md — Clean-cutover gate + live end-to-end verification of capture & failure handling
 
 **UI hint**: yes

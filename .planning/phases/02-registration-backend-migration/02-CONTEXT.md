@@ -32,10 +32,10 @@ Covers requirements REG-01, REG-02, REG-03, REG-04.
 - **D-05:** Each submission writes a row with: **name**, **email**, **consent value**, **submission timestamp** (server-side, generated in the Apps Script), **source page** (which route/form the submission came from — distinguishes `/` vs `/new-12345`).
 
 ### Duplicates
-- **D-06:** **No deduplication.** Every submission is appended as its own row, even if the same email registers multiple times.
+- **D-06 [informational]:** **No deduplication.** Every submission is appended as its own row, even if the same email registers multiple times. *(Deliberate non-action — no implementation work; not plan-tracked.)*
 
 ### Spam Protection
-- **D-07:** **None for launch.** No honeypot, no rate limiting. Accepted for launch; can be revisited later if junk rows become a problem.
+- **D-07 [informational]:** **None for launch.** No honeypot, no rate limiting. Accepted for launch; can be revisited later if junk rows become a problem. *(Deliberate non-action — no implementation work; not plan-tracked.)*
 
 ### Scope: Both Routes
 - **D-08:** Migrate **both** forms to the new endpoint — `src/routes/+page.svelte` (live landing page) **and** `src/routes/new-12345/+page.svelte` (dark-theme prototype). Since the dark theme is slated to become the primary page later, migrating it now means it already works at merge time and leaves **zero** Formspree calls anywhere.
