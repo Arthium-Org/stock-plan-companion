@@ -23,10 +23,10 @@ Launch-polish scope. Each maps to a roadmap phase.
 
 ### Links & Contact
 
-- [ ] **LINK-01**: Footer contact email links to `contact@arthium.org`
-- [ ] **LINK-02**: All repository links point to `github.com/Arthium-Org/stock-plan-companion-app`
-- [ ] **LINK-03**: The prominent GitHub call-to-action near Register/hero is removed
-- [ ] **LINK-04**: A single GitHub repository link remains in the footer
+- [x] **LINK-01**: Footer contact email links to `contact@arthium.org`
+- [x] **LINK-02**: All repository links point to `github.com/Arthium-Org/stock-plan-companion-app`
+- [x] **LINK-03**: The prominent GitHub call-to-action near Register/hero is removed
+- [x] **LINK-04**: A single GitHub repository link remains in the footer
 
 ## v2 Requirements
 
@@ -62,10 +62,10 @@ Deferred to a future cycle.
 | REG-02 | Phase 2 | Complete |
 | REG-03 | Phase 2 | Complete |
 | REG-04 | Phase 2 | Complete |
-| LINK-01 | Phase 3 | Pending |
-| LINK-02 | Phase 3 | Pending |
-| LINK-03 | Phase 3 | Pending |
-| LINK-04 | Phase 3 | Pending |
+| LINK-01 | Phase 3 | Complete |
+| LINK-02 | Phase 3 | Complete |
+| LINK-03 | Phase 3 | Complete |
+| LINK-04 | Phase 3 | Complete |
 
 **Coverage:**
 

@@ -13,7 +13,7 @@ This milestone takes the existing, already-built arthium.org marketing site from
 
 - [x] **Phase 1: Download Wiring & Release Config** - A registered visitor downloads the correct, signed macOS build from the right repo; Windows shows a safe placeholder; future releases need only a config edit (completed 2026-07-06)
 - [x] **Phase 2: Registration Backend Migration** - Every registration is captured via Google Apps Script → Google Sheet with no monthly cap, preserving the existing form UX (completed 2026-07-06)
-- [ ] **Phase 3: Links, Contact & CTA Cleanup** - All outbound links and contact info point to production destinations; the duplicate GitHub CTA is gone, leaving one quiet footer link
+- [x] **Phase 3: Links, Contact & CTA Cleanup** - All outbound links and contact info point to production destinations; the duplicate GitHub CTA is gone, leaving one quiet footer link (completed 2026-07-06)
 
 ## Phase Details
 
@@ -73,10 +73,10 @@ This milestone takes the existing, already-built arthium.org marketing site from
   3. The prominent GitHub CTA near the hero/register area is gone.
   4. A visitor scanning the page sees exactly one GitHub link, in the footer.
 
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — Add shared repoUrl constant; fix nav/footer GitHub links + Contact mailto; remove hero + Open Source competing GitHub CTAs (test → edit page → visual verify)
+- [x] 03-01-PLAN.md — Add shared repoUrl constant; fix nav/footer GitHub links + Contact mailto; remove hero + Open Source competing GitHub CTAs (test → edit page → visual verify)
 
 **UI hint**: yes
 
@@ -89,4 +89,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|-----------------|--------|-----------|
 | 1. Download Wiring & Release Config | 1/1 | Complete   | 2026-07-06 |
 | 2. Registration Backend Migration | 2/2 | Complete    | 2026-07-06 |
-| 3. Links, Contact & CTA Cleanup | 0/1 | Not started | - |
+| 3. Links, Contact & CTA Cleanup | 1/1 | Complete   | 2026-07-06 |
