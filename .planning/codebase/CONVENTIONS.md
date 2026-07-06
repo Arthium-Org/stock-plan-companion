@@ -1,154 +1,187 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-07-03
+**Analysis Date:** 2026-07-06
 
 ## Naming Patterns
 
 **Files:**
-- Component files: PascalCase for Svelte components (`BlurredScreenshot.svelte`)
-- Route files: SvelteKit convention with `+` prefix (`+page.svelte`, `+layout.svelte`)
-- Test files: Match source file with `.test.ts` or `.spec.ts` suffix (e.g., `page.svelte.test.ts`, `demo.spec.ts`)
-- Type definition files: Ends with `.d.ts` (`app.d.ts`)
+- **Svelte components:** PascalCase (e.g., `BlurredScreenshot.svelte`)
+- **SvelteKit routes:** Conventional kit structure: `+page.svelte`, `+layout.svelte`, `+layout.ts` for route files
+- **TypeScript files:** camelCase for utilities and helpers (e.g., `app.d.ts`, `+layout.ts`)
+- **Test files:** camelCase with `.test.ts`, `.spec.ts`, or `.svelte.test.ts` suffix
 
 **Functions:**
-- camelCase for all functions (`nextScreenshot`, `prevScreenshot`, `handleFormSubmit`)
-- Event handlers: Prefix with `handle` or verb form (`handleFormSubmit`, `on:click`)
-- Descriptive names that indicate purpose (not abbreviated)
+- camelCase for all functions (e.g., `nextScreenshot()`, `prevScreenshot()`, `handleFormSubmit()`, `frame()`)
+- Event handlers prefixed with `handle` (e.g., `handleFormSubmit`)
+- Callback functions use explicit names reflecting their purpose (e.g., `pause`, `resume`)
 
 **Variables:**
-- camelCase for local and module-level variables (`formSubmitted`, `formLoading`, `formError`, `activeScreenshot`, `downloadLinks`)
-- Boolean variables clearly indicate state (`show`, `formSubmitted`, `formLoading`)
-- Constants in objects stored as camelCase properties
+- camelCase for local variables and state (e.g., `formSubmitted`, `formLoading`, `formError`, `activeScreenshot`, `downloadLinks`)
+- camelCase for reactive properties in Svelte (e.g., `let formError = ''`)
+- Constants use camelCase (e.g., `features = [...]`, `screenshots = [...]`)
 
-**Types:**
-- Interface/type names: PascalCase (inferred from usage in `BlurredScreenshot` props)
-- Object property names: camelCase (`blurRegions`, `top`, `left`, `width`, `height`)
-- Generic type parameters: Single uppercase letters or descriptive PascalCase
-
-**CSS Classes:**
-- kebab-case for all CSS class names (`.screenshot-container`, `.blur-date-id`, `.btn-primary`, `.btn-secondary`)
-- Tailwind utility classes used extensively (`.w-full`, `.h-auto`, `.flex`, `.grid`)
-- Semantic class names when not using utilities (`.screenshot-container`, `.blur-date-id`)
+**Types and Interfaces:**
+- PascalCase for type names (e.g., `HTMLElement`, `HTMLFormElement`)
+- Svelte component props typed inline (e.g., `export let src: string`, `export let blurRegions: Array<{...}>`)
 
 ## Code Style
 
 **Formatting:**
 - Tool: Prettier v3.4.2
-- Tabs: Enabled (useTabs: true)
-- Quote style: Single quotes (`'import...'`, `'string'`)
-- Trailing commas: None (trailingComma: "none")
-- Print width: 100 characters
-- Svelte parser: prettier-plugin-svelte enabled
-- Tailwind ordering: prettier-plugin-tailwindcss enabled for class sorting
+- Indent: **tabs** (4 spaces equivalent)
+- Quotes: **single quotes** for strings and imports
+- Trailing commas: **none**
+- Line width: **100 characters**
+- Plugins: `prettier-plugin-svelte`, `prettier-plugin-tailwindcss` (for class organization)
 
 **Linting:**
 - Tool: ESLint v9.18.0
-- Configs: `@eslint/js`, `typescript-eslint`, `eslint-plugin-svelte`
-- Integration: ESLint config file is `eslint.config.js` (new flat config format)
-- Rules override: `no-undef` disabled for TypeScript projects (handled by TypeScript)
-- Prettier integration: eslint-config-prettier prevents conflicts
+- Config: `eslint.config.js` (flat config format)
+- Plugins: `@eslint/js`, `typescript-eslint`, `eslint-plugin-svelte`
+- Integration: Prettier via `eslint-config-prettier` to avoid formatting conflicts
+- TypeScript strict mode enabled via `tsconfig.json` with `strict: true`
 
-**TypeScript:**
-- Version: 5.0+
-- Strict mode: Enabled (strict: true)
-- Target: ESM modules (type: "module" in package.json)
-- Language features: forceConsistentCasingInFileNames, resolveJsonModule, esModuleInterop all enabled
+**Run Commands:**
+```bash
+npm run format          # Format all files with Prettier
+npm run lint            # Check linting and formatting
+npm run check           # Run TypeScript checks and svelte-check
+npm run check:watch    # Watch mode for type checking
+```
 
 ## Import Organization
 
 **Order:**
-1. Svelte framework imports (`import { onMount } from 'svelte'`)
-2. Third-party library imports (`import { describe, it, expect } from 'vitest'`)
-3. Component imports (`import BlurredScreenshot from '$lib/BlurredScreenshot.svelte'`)
-4. Utility imports (`import { page } from '@vitest/browser/context'`)
+1. Svelte imports (e.g., `import { onMount } from 'svelte'`)
+2. External packages (e.g., `import { FileText, BarChart3 } from '@lucide/svelte'`)
+3. Local components and utilities (e.g., `import BlurredScreenshot from '$lib/BlurredScreenshot.svelte'`)
+4. Type imports (implicit in TypeScript)
 
 **Path Aliases:**
-- `$lib`: Maps to `src/lib/` for shared components and utilities
-- `$app`: Built-in SvelteKit paths for app-specific modules
-- Relative imports used within same directory or clear hierarchy
+- `$lib/` - Points to `src/lib/` (for shared components and utilities)
+- Standard SvelteKit aliases: `$app`, `$env` for app and environment modules
 
-**Style:**
-- Named imports preferred over default imports
-- Each import statement on separate line when multiple items
-- Alphabetically organized when importing multiple items from same module
+**Example:**
+```typescript
+// ✓ Correct order
+import { onMount } from 'svelte';
+import { FileText, BarChart3 } from '@lucide/svelte';
+import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
+```
 
 ## Error Handling
 
 **Patterns:**
-- Try-catch blocks for async operations (fetch calls)
-- Generic, user-friendly error messages shown in UI (`'An error occurred. Please try again.'`)
-- State-based error display using variables (`formError` variable in component)
-- Finally blocks ensure cleanup (setting loading state to false)
-- No error swallowing - errors always communicated to user
+- Try-catch blocks for async operations (e.g., fetch calls)
+- User-friendly error messages stored in reactive variables
+- Error state management via dedicated variables (e.g., `formError: ''`)
+- Fallback behavior when operations fail
 
-**Example Pattern (from `+page.svelte:130-156`):**
+**Example from `src/routes/+page.svelte`:**
 ```typescript
-try {
-	const response = await fetch('...');
-	if (response.ok) {
-		// Success handling
-	} else {
-		formError = 'Failed to submit form. Please try again.';
+let formError = '';
+
+async function handleFormSubmit(e: Event) {
+	formError = '';
+	
+	try {
+		const response = await fetch('https://formspree.io/f/xvzjdkaj', {
+			method: 'POST',
+			body: formData,
+			headers: { Accept: 'application/json' }
+		});
+		
+		if (response.ok) {
+			formSubmitted = true;
+		} else {
+			formError = 'Failed to submit form. Please try again.';
+		}
+	} catch (error) {
+		formError = 'An error occurred. Please try again.';
+	} finally {
+		formLoading = false;
 	}
-} catch (error) {
-	formError = 'An error occurred. Please try again.';
-} finally {
-	formLoading = false;
 }
 ```
 
 ## Logging
 
-**Framework:** Console (no dedicated logging library observed)
+**Framework:** `console` (no external logging library configured)
 
 **Patterns:**
-- No console logging in production code observed
-- Recommended approach would be to avoid console statements in components
-- When needed, use for development debugging only
+- Not heavily used in current codebase
+- Comments preferred over console logs for code documentation
+- Errors are captured and displayed to users via UI state
 
 ## Comments
 
 **When to Comment:**
-- TypeScript comments used in config files to explain references (see `tsconfig.json` line 14-18)
-- No inline code comments observed in source files
-- Self-documenting code preferred through clear naming
+- Complex logic requiring explanation (e.g., animation timing, scroll behavior calculations)
+- Non-obvious implementation details (e.g., "one copy of the card set" for compliance ticker)
+- TODO items for future work (e.g., "TODO: update these direct-download URLs on EVERY release")
+- Accessibility and UX considerations
 
-**JSDoc/TSDoc:**
-- Not currently used in observed source files
-- Would be appropriate for exported functions and components in larger codebases
+**Example from `src/routes/+page.svelte`:**
+```typescript
+// Auto-scrolling compliance ticker: native scroll so users can wheel/click;
+// pauses on hover or keyboard focus, seamless loop via duplicated content.
+let tickerEl: HTMLElement;
+
+const half = el.scrollHeight / 2; // one copy of the card set
+```
+
+**JSDoc/TSDoc:** Not used in current codebase; rely on TypeScript type annotations for documentation.
 
 ## Function Design
 
-**Size:** 
-- Most functions are short and focused (10-40 lines typical)
-- Modular component functions with single responsibilities
+**Size:** Functions are generally small and focused on a single responsibility
+- Event handlers: 2-30 lines
+- Utility functions: 1-10 lines
 
 **Parameters:**
-- Exported Svelte component props are explicit and typed (`export let src: string`, `export let alt: string`)
-- Event handlers receive appropriate event types (`e: Event`)
-- Type annotations used throughout for clarity
+- Explicit typing required (e.g., `e: Event`)
+- Type casting where necessary (e.g., `e.target as HTMLFormElement`)
+- Default parameters used for optional values (e.g., `blurRegions: Array<{...}> = []`)
 
 **Return Values:**
-- Functions return appropriate types (undefined for side effects, arrays/objects for data)
-- Async functions marked with `async` keyword, returning Promises implicitly
-- Component functions use Svelte's reactive assignments for return values
+- Async functions return Promises implicitly via `async/await`
+- Event handlers typically return void
+- Pure functions return computed/transformed values
 
 ## Module Design
 
 **Exports:**
-- Svelte components exported as default (implicitly by component structure)
-- Function exports use named exports when possible
-- Type-only exports for type definitions
+- Named exports for components: `export let src: string` for props in Svelte
+- Default exports for Svelte components
+- SvelteKit special exports: `export const prerender = true`
 
-**Barrel Files:**
-- `src/lib/index.ts` exists but currently empty (placeholder for future exports)
-- Components imported directly by full path rather than through barrel file
+**Barrel Files:** Not used; components imported directly from their locations
 
-**Component Props:**
-- Props declared using `export let` in `<script>` block (Svelte 5.0 reactive declarations)
-- Default values provided when appropriate (e.g., `blurRegions: Array<...> = []`)
-- Props documented through TypeScript types
+**File Organization:**
+- Component + related styles colocated (Svelte files include `<style>` blocks)
+- Route handlers and loaders in `+page.svelte` and `+layout.ts`
+- Shared components in `src/lib/`
+
+## CSS and Styling
+
+**Approach:** Tailwind CSS with custom component classes
+
+**Class Naming:** kebab-case (Tailwind convention)
+- Components: `.btn-primary`, `.section-container`, `.compliance-ticker`
+- Utilities: Inline Tailwind classes (e.g., `px-4 py-3 rounded-lg`)
+- Custom CSS: Defined in `src/app.css` using `@layer components`
+
+**Example from `src/app.css`:**
+```css
+@layer components {
+	.btn-primary {
+		@apply inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-all hover:bg-blue-700 active:scale-95;
+	}
+}
+```
+
+**Dark Mode:** Scoped to specific routes (e.g., `.spc-v2.dark` for `/new-12345` route) using CSS custom properties (`--text`, `--bg`, `--accent`, etc.)
 
 ---
 
-*Convention analysis: 2026-07-03*
+*Convention analysis: 2026-07-06*

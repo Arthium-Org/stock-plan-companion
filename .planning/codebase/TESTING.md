@@ -1,86 +1,83 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-07-03
+**Analysis Date:** 2026-07-06
 
 ## Test Framework
 
 **Runner:**
 - Vitest v3.2.3
-- Config: `vite.config.ts` (configured within Vite config, not separate file)
-- Dual-project setup: separate configurations for browser and server environments
+- Config: `vite.config.ts` with dual test projects
+- Package: `npm run test:unit` for watch mode, `npm test` for single run
 
 **Assertion Library:**
-- Vitest built-in `expect` API with matchers
-- Browser-specific matchers via `@vitest/browser` (e.g., `toBeInTheDocument()`)
+- Built-in Vitest assertions via `expect()`
+- Browser-specific matchers: `@vitest/browser/matchers` (e.g., `toBeInTheDocument()`)
 
 **Run Commands:**
 ```bash
-npm run test:unit              # Run tests with watch
-npm run test                   # Run tests once (CI mode)
-npm run check                  # Type check via svelte-check
+npm run test:unit              # Run tests in watch mode
+npm test                       # Run all tests once (CI mode)
+npm run check                  # TypeScript + Svelte checks
+npm run check:watch           # Watch mode for type checking
 ```
 
 ## Test File Organization
 
-**Location:**
-- Co-located with source files: tests live in `src/` directory next to implementation
-- Example: `src/routes/page.svelte.test.ts` sits alongside `src/routes/+page.svelte`
-- Example: `src/demo.spec.ts` in same directory as component under test
+**Location:** Co-located with source code
 
-**Naming:**
-- Svelte component tests: `{componentName}.svelte.test.ts` (e.g., `page.svelte.test.ts`)
-- Unit tests: `{moduleName}.spec.ts` (e.g., `demo.spec.ts`)
-- Both `.test.ts` and `.spec.ts` suffixes recognized by Vitest
+**Naming Convention:**
+- `.test.ts` - TypeScript unit tests
+- `.spec.ts` - JavaScript/TypeScript tests
+- `.svelte.test.ts` - Svelte component tests
+- `.svelte.spec.ts` - Alternative Svelte component test naming
 
 **Structure:**
 ```
 src/
-├── demo.spec.ts                # Unit test for utilities/functions
+├── lib/
+│   └── BlurredScreenshot.svelte
 ├── routes/
 │   ├── +page.svelte
-│   ├── +layout.svelte
-│   └── page.svelte.test.ts     # Browser test for component
-└── lib/
-    └── BlurredScreenshot.svelte
+│   └── page.svelte.test.ts          ← Co-located test for +page.svelte
+├── demo.spec.ts                      ← Standalone unit test
+└── app.d.ts
 ```
+
+## Test Projects Configuration
+
+The `vite.config.ts` defines two separate test environments:
+
+**1. Client Tests** (browser environment)
+- **Environment:** Browser via Playwright (Chromium)
+- **Provider:** `@vitest/browser` with Playwright backend
+- **Include:** `src/**/*.svelte.{test,spec}.{js,ts}`
+- **Exclude:** `src/lib/server/**`
+- **Setup:** `vitest-setup-client.ts`
+- **Purpose:** Test Svelte components in a DOM environment
+
+**2. Server Tests** (Node environment)
+- **Environment:** Node.js
+- **Include:** `src/**/*.{test,spec}.{js,ts}`
+- **Exclude:** `src/**/*.svelte.{test,spec}.{js,ts}`
+- **Purpose:** Test utilities, helpers, and server-side logic
 
 ## Test Structure
 
 **Suite Organization:**
 ```typescript
+// From src/demo.spec.ts
 import { describe, it, expect } from 'vitest';
 
-describe('component or feature name', () => {
-	it('should do something specific', () => {
-		// Arrange
-		// Act
-		// Assert
-	});
-
-	it('should handle edge case', () => {
-		// test body
+describe('sum test', () => {
+	it('adds 1 + 2 to equal 3', () => {
+		expect(1 + 2).toBe(3);
 	});
 });
 ```
 
-**Patterns:**
-- All tests wrapped in `describe` blocks for logical grouping
-- Each test uses `it` for individual test cases
-- Descriptive test names using "should" pattern (e.g., "should render h1")
-- Single assertion or grouped related assertions per test preferred
-
-## Browser Tests
-
-**Framework:** Vitest Browser + Playwright
-
-**Setup:**
-- Provider: Playwright (chromium browser)
-- Environment: browser
-- Test file patterns: `**/*.svelte.{test,spec}.{js,ts}`
-- Setup file: `vitest-setup-client.ts` (defines Vitest/Playwright type references)
-
-**Example Pattern (from `src/routes/page.svelte.test.ts`):**
+**Svelte Component Pattern:**
 ```typescript
+// From src/routes/page.svelte.test.ts
 import { page } from '@vitest/browser/context';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
@@ -97,189 +94,175 @@ describe('/+page.svelte', () => {
 ```
 
 **Patterns:**
-- `render()` from `vitest-browser-svelte` mounts Svelte component in test DOM
-- `page` context from `@vitest/browser/context` provides DOM queries
-- DOM queries use accessible selectors: `getByRole()` preferred
-- Async/await for browser interactions and assertions
-- Browser-specific matchers: `toBeInTheDocument()`, etc.
+- Use `describe()` to group related tests
+- Use `it()` to define individual test cases
+- Use `await expect.element()` for async DOM assertions in browser tests
+- Use synchronous `expect()` for unit test assertions
 
-## Unit Tests
+## Browser Testing
 
-**Example Pattern (from `src/demo.spec.ts`):**
+**Framework:** `@vitest/browser` with Playwright provider
+
+**Imports:**
 ```typescript
-import { describe, it, expect } from 'vitest';
-
-describe('sum test', () => {
-	it('adds 1 + 2 to equal 3', () => {
-		expect(1 + 2).toBe(3);
-	});
-});
+import { page } from '@vitest/browser/context';        // DOM context
+import { render } from 'vitest-browser-svelte';        // Svelte component renderer
+import { describe, expect, it } from 'vitest';         // Test framework
 ```
 
-**Patterns:**
-- No external dependencies or renders
-- Direct function/module testing
-- Synchronous assertions with `.toBe()`, `.toEqual()`, etc.
+**Component Rendering:**
+- `render(Component)` - Mounts a Svelte component into the DOM
+- Supports component props passed as second argument
+
+**DOM Queries:**
+- `page.getByRole(role, options)` - Query by accessibility role
+- `page.getByText(text)` - Query by text content
+- Standard DOM APIs via `page` context
+
+**Assertions:**
+- `await expect.element(element).toBeInTheDocument()` - Check element presence
+- Other matchers inherited from `@vitest/browser/matchers`
+
+## Setup Files
+
+**Client Setup:** `vitest-setup-client.ts`
+```typescript
+/// <reference types="@vitest/browser/matchers" />
+/// <reference types="@vitest/browser/providers/playwright" />
+```
+
+**Purpose:**
+- Configures TypeScript types for browser matchers
+- Enables Playwright provider types
+- Applied only to browser tests (`setupFiles: ['./vitest-setup-client.ts']`)
 
 ## Mocking
 
-**Framework:** Vitest has built-in mocking via `vi` (not currently visible in test files)
+**Not extensively configured** in current codebase, but Vitest provides:
+- `vi.mock()` - Mock modules
+- `vi.spyOn()` - Spy on functions
+- `vi.fn()` - Create mock functions
 
-**What to Mock (Recommended):**
-- Network requests (fetch calls) - use `vi.mock()` or `msw` for API mocking
-- External APIs (Lucide icons, Formspree endpoint)
-- File operations if present
-- Time-dependent functions (`setTimeout`, `setInterval`)
-
-**What NOT to Mock:**
-- Svelte components being tested - render them directly
-- Core library components
-- DOM APIs when using browser test environment
-- Simple utility functions
-
-**Current Patterns:**
-- No explicit mocks visible in current test files
-- Browser tests interact with actual DOM
-- API calls in component (`handleFormSubmit`) could be mocked in future tests
-
-## Test Configuration Details
-
-**Project Configuration (from `vite.config.ts`):**
-
-**Browser Tests (name: 'client'):**
-- Environment: browser
-- Browser provider: Playwright (chromium)
-- Included files: `src/**/*.svelte.{test,spec}.{js,ts}`
-- Excluded: `src/lib/server/**`
-- Setup file: `./vitest-setup-client.ts`
-
-**Server Tests (name: 'server'):**
-- Environment: node
-- Included files: `src/**/*.{test,spec}.{js,ts}`
-- Excluded: `src/**/*.svelte.{test,spec}.{js,ts}`
-
-**Access:** Run specific project:
-```bash
-npm run test:unit -- --project=client    # Browser tests only
-npm run test:unit -- --project=server    # Server tests only
-```
+**Common patterns for this project would be:**
+- Mock fetch for API testing: `vi.stubGlobal('fetch', ...)`
+- Mock component props for isolated component tests
+- Mock event listeners for behavior tests
 
 ## Fixtures and Factories
 
-**Test Data:**
-- No fixtures or factory functions currently visible
-- Test data defined inline within test functions
-- Svelte 5.0 `$props()` can be used to test component props
+**Not used in current codebase.**
 
-**Example (from browser test):**
-```typescript
-render(Page);  // No fixture needed, component imports directly
-```
+If needed, create in `src/__tests__/fixtures/` or inline within test files:
 
-**Recommended Structure for Future:**
 ```typescript
-// fixtures/mockData.ts
-export const mockScreenshot = {
-	src: 'https://example.com/image.webp',
-	alt: 'Test screenshot',
-	blurRegions: [{ top: '1%', left: '8%', width: '35%', height: '8%' }]
+// Example pattern for fixture data
+const mockScreenshot = {
+	src: 'https://example.com/image.png',
+	title: 'Portfolio View',
+	description: 'Your holdings overview'
 };
 ```
 
 ## Coverage
 
-**Requirements:** None enforced (no coverage thresholds observed)
+**Requirements:** Not configured or enforced
 
-**Viewing Coverage:**
+**Coverage config:** No `coverage` block in `vite.config.ts`
+
+**To enable coverage:**
 ```bash
-npm run test:unit -- --coverage  # Generate coverage report (requires coverage config)
+npm install -D @vitest/coverage-v8
 ```
 
-**Current Status:**
-- 2 test files found: `demo.spec.ts` and `page.svelte.test.ts`
-- No coverage configuration currently active
-- Coverage thresholds could be added to `vite.config.ts` if desired
+Then add to `vite.config.ts`:
+```typescript
+test: {
+	coverage: {
+		provider: 'v8',
+		reporter: ['text', 'json', 'html']
+	}
+}
+```
 
 ## Test Types
 
 **Unit Tests:**
-- Scope: Individual functions/utilities (e.g., `demo.spec.ts`)
-- Approach: Direct function calls with input/output verification
-- Example: Testing arithmetic, string manipulation, data transformation
+- Scope: Individual functions and logic
+- Example: `src/demo.spec.ts` - Tests simple arithmetic
+- Approach: Fast, isolated, synchronous assertions
+- No external dependencies
 
-**Component/Integration Tests:**
-- Scope: Svelte components with their props and event handlers
-- Approach: Render component, interact with DOM, assert visual/behavioral outcomes
-- Example: Testing form submission, button clicks, text display
-- Uses: `vitest-browser-svelte` for DOM access
+**Component Tests:**
+- Scope: Svelte components in isolation
+- Example: `src/routes/page.svelte.test.ts` - Tests rendering
+- Approach: Render component, query DOM, assert presence
+- Uses browser environment and DOM APIs
+
+**Integration Tests:**
+- Not implemented
+- Would test: Multiple components working together, data flow between modules
+- Approach: Render multiple components, simulate user interactions, assert state changes
 
 **E2E Tests:**
-- Framework: Not currently configured
-- Note: Could be added using Playwright directly or other E2E frameworks
-- Potential tools: Playwright Test, Cypress (both compatible with Vite setup)
+- Framework: Not configured (Playwright installed but not configured for E2E)
+- Would test: Full user workflows in production-like environment
+- Config needed: Separate Playwright config file
 
-## Async Testing
+## Common Patterns
 
-**Pattern:**
+**Async Testing:**
 ```typescript
-it('should render h1', async () => {
+// Browser tests with DOM async operations
+it('should render element', async () => {
 	render(Page);
 	const heading = page.getByRole('heading', { level: 1 });
-	await expect.element(heading).toBeInTheDocument();
+	await expect.element(heading).toBeInTheDocument();  // await on assertions
 });
 ```
 
-**Key Points:**
-- Test function marked with `async`
-- DOM queries may return Promises (via Playwright)
-- `await` on expectations that interact with browser
-- Component render is synchronous; DOM assertions are async
-
-## Error Testing
-
-**Pattern (Recommended):**
+**Error Testing:**
 ```typescript
-it('should display error on fetch failure', async () => {
-	// Mock fetch to reject
-	vi.global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
-	
-	// Render and interact
-	render(Component);
-	// ... trigger error condition
-	
-	// Assert error message appears
-	const errorMsg = page.getByText('An error occurred');
-	await expect.element(errorMsg).toBeVisible();
+// Pattern for testing error states
+it('should show error message on failure', async () => {
+	// Setup: mock failed response
+	// Render: component that calls the API
+	// Assert: error message appears in DOM
 });
 ```
 
-**Current Implementation (from `+page.svelte`):**
-- Component catches errors and sets `formError` state
-- UI conditionally displays error message:
-```svelte
-{#if formError}
-	<p class="text-sm text-red-600">{formError}</p>
-{/if}
+**Component Props Testing:**
+```typescript
+// Example pattern for testing props
+import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
+
+it('should blur specified regions', () => {
+	render(BlurredScreenshot, {
+		props: {
+			src: 'test.png',
+			alt: 'Test',
+			blurRegions: [{ top: '10%', left: '10%', width: '50%', height: '50%' }]
+		}
+	});
+	// Assert blur elements are rendered
+});
 ```
 
-## Test Execution
+## Test Execution Flow
 
-**Local Development:**
-```bash
-npm run test:unit              # Run with file watch
-npm run test:unit -- --ui      # Browser UI mode (with vitest UI)
-```
+1. **Watch mode** (`npm run test:unit`):
+   - Runs both client and server test projects
+   - Re-runs on file changes
+   - Reports results in terminal
 
-**CI/CD:**
-```bash
-npm run test                   # Runs vitest with --run flag (no watch)
-```
+2. **CI mode** (`npm test`):
+   - Single run of both projects
+   - Exits with status code (0 for pass, 1 for fail)
+   - Used in pre-commit hooks and CI/CD
 
-**Watch Mode:**
-- Default behavior during development
-- Re-runs affected tests on file changes
-- Browser environment reloads between runs
+3. **Type checking** (`npm run check`):
+   - SvelteKit sync + `svelte-check` + TypeScript compilation
+   - Runs before tests in development
 
 ---
 
-*Testing analysis: 2026-07-03*
+*Testing analysis: 2026-07-06*

@@ -1,272 +1,199 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-07-03
+**Analysis Date:** 2026-07-06
 
 ## Tech Debt
 
-**Package Configuration Mismatch:**
-- Issue: `package.json` defines `"name": "fusion-svelte-vite-starter"` but project is actually "stock-plan-companion". Name should reflect the actual project.
+**Manual release URL updates (Critical for release workflow):**
+- Issue: Download links in `src/routes/+page.svelte` (lines 185-190) and `src/routes/new-12345/+page.svelte` (lines 210-215) are hard-coded with `v1.0.0` tag and exact filename — must be manually updated on every GitHub release
+- Files: `src/routes/+page.svelte`, `src/routes/new-12345/+page.svelte`
+- Impact: If release URLs aren't updated before deployment, users get links to wrong version. This is error-prone and blocks each release
+- Fix approach: Automate via GitHub release template, or fetch release metadata from GitHub API client-side, or store URLs in a config file updated by CI/CD
+
+**Code duplication across page routes:**
+- Issue: `src/routes/+page.svelte` (786 lines) and `src/routes/new-12345/+page.svelte` (811 lines) are nearly identical, including:
+  - Compliance ticker logic (lines 20-62 in both files)
+  - Screenshot carousel logic (lines 119-150 in both files)
+  - Form submission to Formspree (lines 166-199 in both files)
+  - Feature definitions, screenshots arrays, and entire layout structure
+- Files: `src/routes/+page.svelte`, `src/routes/new-12345/+page.svelte`
+- Impact: Bug fixes and feature updates must be applied twice; maintenance burden increases; inconsistency risk
+- Fix approach: Extract shared logic into reusable components (`TickerLogic.svelte`, `ScreenshotCarousel.svelte`, `RegistrationForm.svelte`); route files become thin wrappers that pass theme/styling variants
+
+**Large monolithic Svelte components:**
+- Issue: Both page routes are 786-811 lines in a single `.svelte` file, mixing layout, logic, form handling, and styling
+- Files: `src/routes/+page.svelte` (786 lines), `src/routes/new-12345/+page.svelte` (811 lines)
+- Impact: Difficult to test, reuse, or reason about; cognitive overhead; hard to maintain long-term
+- Fix approach: Break into smaller components: `ComplianceTicker.svelte`, `ScreenshotViewer.svelte`, `FeatureGrid.svelte`, `RegistrationCard.svelte`, `StatusSection.svelte`
+
+**Package metadata not updated:**
+- Issue: `package.json` still contains default Vite starter values:
+  - `"name": "fusion-svelte-vite-starter"` should be `"stock-plan-companion"`
+  - `"version": "0.0.1"` doesn't match actual release version
 - Files: `package.json`
-- Impact: Confusion about project identity, incorrect package metadata if published, CI/CD tooling may reference wrong name
-- Fix approach: Update `package.json` name field to `"stock-plan-companion"`
+- Impact: Confusing when publishing to npm or creating releases; build artifacts misleading
+- Fix approach: Update package.json name/version in release CI/CD or manually before each release
 
-**Duplicate Icon Library Dependencies:**
-- Issue: Both `@lucide/svelte` (1.23.0) and `lucide-svelte` (1.0.1) are installed in dependencies
-- Files: `package.json`, `src/routes/+page.svelte` (only imports from `@lucide/svelte`)
-- Impact: Bloated bundle size, maintenance burden, confusion about which package to use
-- Fix approach: Remove `lucide-svelte` from `package.json` and ensure all imports use only `@lucide/svelte`
-
-**Hardcoded Placeholder Values in Production Code:**
-- Issue: Form handler contains hardcoded placeholder strings that should be environment variables:
-  - Formspree form ID: `'https://formspree.io/f/YOUR_FORM_ID'` (line 131)
-  - Release download URLs: `'https://github.com/yourusername/stock-plan-companion/releases'` (lines 144-146)
-- Files: `src/routes/+page.svelte` (lines 131, 144-146)
-- Impact: Form submissions will fail in production. Download links point to nonexistent URLs. Security risk if credentials embedded in URLs.
-- Fix approach: Extract to environment variables (e.g., `VITE_FORMSPREE_ID`, `VITE_GITHUB_RELEASES_URL`). Create `.env.example` template with required variables.
-
-**Placeholder README Documentation:**
-- Issue: `README.md` is the default Svelte CLI template, not project-specific documentation
+**README not updated from template:**
+- Issue: `README.md` still contains generic SvelteKit starter instructions (creating projects, development setup), not actual project documentation
 - Files: `README.md`
-- Impact: No documentation for contributors or users about what this project actually does, how to contribute, or how to build/deploy
-- Fix approach: Replace with real documentation covering: project purpose, features, getting started, architecture, contribution guide, license
-
-**Navigation Links Point to Generic GitHub:**
-- Issue: Multiple hardcoded href links point to `"https://github.com"` without specific repository
-- Files: `src/routes/+page.svelte` (lines 172, 204, 610, 628)
-- Impact: Users cannot navigate to the actual project repository. Breaks primary CTA for open source contribution
-- Fix approach: Define repository URL in environment variable and reference throughout, e.g., `VITE_GITHUB_REPO_URL`
-
-**Placeholder .env Example Missing:**
-- Issue: `.gitignore` specifies `.env` files but no `.env.example` template exists
-- Files: `.gitignore`, (missing) `.env.example`
-- Impact: New developers don't know which environment variables are required or how to configure them
-- Fix approach: Create `.env.example` with placeholders for: `VITE_FORMSPREE_ID`, `VITE_GITHUB_REPO_URL`, `VITE_GITHUB_RELEASES_URL`
+- Impact: Users checking out the repo see irrelevant boilerplate; no guidance on contributions, building, or usage
+- Fix approach: Replace with actual project README covering: what it is, how to build/run locally, how to contribute, deployment instructions
 
 ## Known Bugs
 
-**Form Submission Never Completes in Production:**
-- Symptoms: Form shows "Registering..." indefinitely or shows error, download links never appear
-- Files: `src/routes/+page.svelte` (lines 123-157)
-- Trigger: User submits registration form when `VITE_FORMSPREE_ID` is not configured
-- Root cause: `fetch()` call uses hardcoded `YOUR_FORM_ID` placeholder which is invalid endpoint
-- Workaround: Configure proper Formspree form ID in environment before deployment
+**Windows download button commented out indefinitely:**
+- Symptoms: "Download for Windows" button permanently hidden in markup despite code being present
+- Files: `src/routes/+page.svelte` (lines 607-611), `src/routes/new-12345/+page.svelte` (lines 628-632)
+- Trigger: Form submission succeeds, but Windows link never shown — Windows users can only see macOS button
+- Workaround: Uncomment lines 607-611 / 628-632 once .exe is built
+- Impact: Windows users blocked from downloading; partial product launch
 
-**Generic "Try Again" Error Messages:**
-- Symptoms: User sees "An error occurred. Please try again." with no debugging information
-- Files: `src/routes/+page.svelte` (lines 150-153)
-- Trigger: Any network error, validation error, or API failure
-- Root cause: Catch block swallows error details and shows generic message
-- Impact: Users cannot understand why form failed, developers cannot debug production issues
+**Footer anchor links produce build warnings:**
+- Symptoms: Build runs with warnings about missing `#privacy` and `#disclaimer` anchor targets
+- Files: `svelte.config.js` (lines 20-24) sets `handleMissingId: 'warn'` as workaround for footer links
+- Cause: Footer has `<a href="#privacy">Privacy</a>` and `<a href="#disclaimer">Disclaimer</a>` but no corresponding sections exist on the page
+- Impact: Will break if `handleMissingId` is changed from 'warn' to 'error'; confusing for accessibility tools
+- Fix approach: Either add real Privacy & Disclaimer sections to landing page, or remove the footer links entirely
 
 ## Security Considerations
 
-**Unvalidated External Image CDN:**
-- Risk: All screenshot images hardcoded to `cdn.builder.io` with specific asset IDs. If CDN is compromised or URLs change, images break and may expose builder.io infrastructure details.
-- Files: `src/routes/+page.svelte` (lines 25-80, 220, 505)
-- Current mitigation: CDN URLs are public/read-only, HTTPS used
-- Recommendations: 
-  - Consider self-hosting screenshots in `/static` directory for security and reliability
-  - If using external CDN, use signed URLs or API keys in environment variables
-  - Add fallback images for CDN failures
-
-**No Content Security Policy:**
-- Risk: Fetching from `formspree.io` and `cdn.builder.io` with no CSP headers to restrict external resource loading
-- Files: `src/routes/+page.svelte` (lines 131)
-- Current mitigation: None - relies on same-origin policy
-- Recommendations: 
-  - Add CSP headers in `svelte.config.js` to explicitly whitelist external domains
-  - Document why each external domain is needed
-
-**Untyped Error Catch:**
-- Risk: Error object in catch block is not typed, could be non-Error object, leading to unsafe property access
-- Files: `src/routes/+page.svelte` (line 152: `catch (error) { ... }`)
-- Current mitigation: Generic message shown, error not logged
-- Recommendations: Type the error as `unknown`, check type before accessing properties, log structured errors
-
-**No Form Input Validation Beyond HTML:**
-- Risk: Email field only has HTML5 `required` attribute. No custom validation, no sanitization before sending to Formspree
-- Files: `src/routes/+page.svelte` (lines 541-555)
-- Current mitigation: Browser HTML5 validation
+**Formspree API key visible in source:**
+- Risk: Formspree form ID `xvzjdkaj` is hard-coded in client-side code at `src/routes/+page.svelte` (line 174) and `src/routes/new-12345/+page.svelte` (line 199), visible in network requests
+- Files: `src/routes/+page.svelte`, `src/routes/new-12345/+page.svelte`
+- Current mitigation: Formspree is a form-submission-as-a-service, designed for this; submissions to a publicly-known form are expected
 - Recommendations:
-  - Add client-side validation for email format before submission
-  - Validate form data structure on server-side if moving to API route
-  - Sanitize form fields to prevent XSS if data is ever displayed back to user
+  - Monitor for spam submissions
+  - Implement CAPTCHA or rate-limiting if spam occurs
+  - Consider moving to server-side email collection (Svelte server action) for better control
+
+**Contact email visible in footer:**
+- Risk: `kvakatidev@gmail.com` appears in footer links at `src/routes/+page.svelte` (line 761) and `src/routes/new-12345/+page.svelte` (line 794)
+- Files: `src/routes/+page.svelte`, `src/routes/new-12345/+page.svelte`
+- Current mitigation: Email address is intentionally public for contact purposes
+- Recommendations: Monitor inbox for spam; consider separate contact form instead of mailto: link
+
+**No Privacy Policy or Terms of Service:**
+- Risk: Site collects user emails via registration form but has no Privacy Policy. Site markets tax/financial record management, which is regulated in some jurisdictions
+- Files: Landing page, no privacy docs
+- Current mitigation: Footer has placeholder link `#privacy` but section missing
+- Recommendations: Add Privacy Policy (email use, retention, third-party sharing), add Disclaimer (not tax/legal advice), add Terms of Service if user data is stored
 
 ## Performance Bottlenecks
 
-**No Image Lazy Loading:**
-- Problem: All 6 screenshot images in gallery load at once, even if user only views 1-2. Each screenshot is large (800x1200 webp from CDN).
-- Files: `src/routes/+page.svelte` (lines 24-79, 304-328)
-- Cause: `<img>` tags lack `loading="lazy"` attribute, thumbnails have full-resolution images loaded
-- Improvement path: 
-  - Add `loading="lazy"` to all screenshot img tags
-  - Generate thumbnail versions (200x300px) for gallery preview
-  - Implement placeholder or skeleton loading for gallery
-
-**Form Submission with No Timeout:**
-- Problem: Form submission can hang indefinitely if Formspree endpoint is slow/unresponsive
-- Files: `src/routes/+page.svelte` (lines 131-137)
-- Cause: Fetch request has no timeout, no AbortController
+**No optimizations for large screenshot assets:**
+- Problem: Multiple screenshot images (up to 1200px height) loaded from Builder.io CDN via Query params; no lazy loading, srcset, or format hints
+- Files: `src/routes/+page.svelte` (lines 73-117), `src/routes/new-12345/+page.svelte` (lines 98-142)
+- Cause: Screenshots hardcoded as direct URLs; no adaptive image sizing
 - Improvement path:
-  - Add 30-second timeout using AbortController
-  - Show timeout error message distinct from submission errors
-  - Allow user to retry after timeout
+  - Add `loading="lazy"` to non-critical images
+  - Use `srcset` with width variants (400, 600, 800, 1000)
+  - Serve next-gen formats (AVIF, WebP) with fallback
+  - Preload hero screenshot
 
-**Large Component (678 lines in single Svelte file):**
-- Problem: `+page.svelte` is 678 lines containing entire landing page layout, logic, and styling in one component
-- Files: `src/routes/+page.svelte`
-- Cause: No component extraction for reusable sections (hero, features, gallery, form, footer)
-- Improvement path:
-  - Extract into separate components: `HeroSection.svelte`, `FeaturesGrid.svelte`, `ScreenshotGallery.svelte`, `RegistrationForm.svelte`, `Footer.svelte`
-  - Reduces cognitive load, improves maintainability, enables code reuse
-
-**Duplicate Screenshot Data:**
-- Problem: Screenshot objects defined in array (lines 24-80) but same URLs duplicated in template (lines 220, 505)
-- Files: `src/routes/+page.svelte`
-- Cause: Manual copy-paste duplication
-- Improvement path: Use single data array, reference in all template locations
+**Compliance ticker animation runs on every frame:**
+- Problem: `requestAnimationFrame` loop runs continuously in `onMount` at 60fps, even when ticker is off-screen on mobile
+- Files: `src/routes/+page.svelte` (lines 33-45), `src/routes/new-12345/+page.svelte` (lines 58-70)
+- Cause: No intersection observer to pause when not visible
+- Improvement path: Use `IntersectionObserver` to disable RAF when ticker not in viewport; saves battery on mobile
 
 ## Fragile Areas
 
-**Screenshot Gallery State Management:**
-- Files: `src/routes/+page.svelte` (lines 17, 82-88, 262-328)
-- Why fragile: `activeScreenshot` is number-only state tracking index. No bounds checking. If screenshots array changes length, navigation could go out of bounds. Modulo arithmetic is safe but tightly couples state to array length.
-- Safe modification: Extract to separate component with local state. Add prop validation to ensure activeScreenshot < screenshots.length
-- Test coverage: No tests for gallery navigation, edge cases (clicking next/prev at boundaries), or array mutation
+**Compliance ticker logic tightly coupled to DOM assumptions:**
+- Files: `src/routes/+page.svelte` (lines 20-62), `src/routes/new-12345/+page.svelte` (lines 45-87)
+- Why fragile:
+  - Relies on exact DOM structure with `.contents` pseudo-element duplication for seamless scroll loop
+  - Hard-coded `scrollHeight / 2` calculation assumes exactly 2 duplicate sets
+  - Breaks if card heights change or more/fewer cards added
+  - No error handling if `tickerEl` is null at unexpected times
+- Safe modification:
+  - Add assertions/guards: `if (!el || el.scrollHeight <= 0) return;`
+  - Extract magic numbers (`30px/sec`, `half = scrollHeight / 2`) to constants
+  - Add tests that verify scroll behavior with various card counts
+- Test coverage: No tests for ticker logic; only basic H1 rendering test exists
 
-**Form Error State:**
-- Files: `src/routes/+page.svelte` (lines 14-16, 123-157)
-- Why fragile: Three reactive variables (`formSubmitted`, `formLoading`, `formError`) manage complex state flow. No explicit state machine. Edge cases: what if response succeeds but downloadLinks never set? What if user submits twice rapidly?
-- Safe modification: Create state machine enum (idle, loading, success, error) with single reactive variable instead of three booleans
-- Test coverage: No tests for form states, error recovery, or rapid resubmissions
+**Form state management using local variables:**
+- Files: `src/routes/+page.svelte` (lines 64-71), `src/routes/new-12345/+page.svelte` (lines 89-96)
+- Why fragile: Form state (`formSubmitted`, `formError`, `formLoading`) managed with reactive variable declarations; no error handling for network failures; Formspree endpoint unreachable causes silent failure
+- Safe modification:
+  - Add fetch timeout
+  - Log errors to console or error service
+  - Add retry mechanism
+  - Test with offline/slow network
 
-**BlurredScreenshot Component CSS Coupling:**
-- Files: `src/lib/BlurredScreenshot.svelte`, `src/routes/+page.svelte` (blur regions defined twice)
-- Why fragile: Blur region positioning is hardcoded in two places (hero screenshot has separate config, gallery has different config). If crop changes, both locations must update. No validation that regions fit image bounds.
-- Safe modification: Consolidate blur region data into single source. Add component prop validation for region dimensions.
-- Test coverage: Component has no tests; blur effects untested
-
-## Test Coverage Gaps
-
-**Untested Main Landing Page:**
-- What's not tested: Hero section, feature grid, screenshot gallery navigation, registration form, all sections
-- Files: `src/routes/+page.svelte` (678 lines, only 1 minimal test in `page.svelte.test.ts`)
-- Risk: Any refactoring or bug fix risks breaking UI without detection. Screenshot navigation could silently break. Form could stop working.
-- Priority: High - this is the entire public-facing interface
-
-**Placeholder Test File:**
-- What's not tested: `src/demo.spec.ts` is a placeholder "sum test" that should be deleted
-- Files: `src/demo.spec.ts`
-- Risk: CI/CD runs this meaningless test; wastes execution time
-- Priority: Medium - remove before production deployment
-
-**No Form Submission Tests:**
-- What's not tested: Form validation, submission flow, error handling, success flow with download links, Formspree integration
-- Files: `src/routes/+page.svelte` lines 123-157
-- Risk: Form is core feature but untested. Formspree configuration changes could silently break user registration.
-- Priority: High
-
-**No Component Unit Tests:**
-- What's not tested: BlurredScreenshot component renders correctly, blur regions apply correctly, lazy loading, image error handling
-- Files: `src/lib/BlurredScreenshot.svelte`
-- Risk: Visual regressions undetected. Blur regions could be positioned incorrectly (revealing sensitive data in screenshots).
-- Priority: High
-
-**No Error Boundary Tests:**
-- What's not tested: App has no error boundary. No tests for what happens if Formspree returns 500, if CDN images fail to load, if fetch throws
-- Files: Entire codebase
-- Risk: Unhandled errors cause white screen of death with no graceful fallback
-- Priority: Medium
-
-**No Accessibility Tests:**
-- What's not tested: Keyboard navigation through gallery, form accessibility, screen reader support for form fields, ARIA labels
-- Files: `src/routes/+page.svelte` entire file
-- Risk: Users with disabilities cannot use app
-- Priority: Medium
-
-## Dependencies at Risk
-
-**Lucide Svelte Version Drift:**
-- Risk: Two different lucide packages installed at different versions (`@lucide/svelte` 1.23.0 vs `lucide-svelte` 1.0.1). Unclear which is canonical. One will likely become unmaintained.
-- Impact: Build size bloated, unclear upgrade path, package confusion
-- Migration plan: Standardize on `@lucide/svelte` which appears to be maintained version. Remove `lucide-svelte` from package.json.
-
-**Playwright Version at 1.53.0:**
-- Risk: Playwright 1.53.0 is relatively new; less battle-tested than older LTS versions. May have undiscovered bugs.
-- Impact: E2E test failures on CI, compatibility issues with specific browser versions
-- Mitigation: Lock Playwright to known-stable version (e.g., 1.40.x), test on CI before updating
-
-**Svelte 5.0 - Major Version Boundary:**
-- Risk: Svelte 5.0 is very recent release. Ecosystem tooling may lag in compatibility (svelte-check 4.0.0, vite-plugin-svelte 6.0.0 are close)
-- Impact: Potential breaking changes in minor Svelte updates, community libraries may not support Svelte 5 yet
-- Mitigation: Document Svelte 5.0 as minimum version, test ecosystem compatibility monthly
-
-## Missing Critical Features
-
-**No Environment Configuration System:**
-- Problem: Form ID, GitHub URLs, and other config are hardcoded strings. No `.env` loading. No validation that required vars are set before build.
-- Blocks: Cannot configure app for different environments (dev, staging, prod). Cannot run in different GitHub orgs.
-- Fix: Implement `env.example` pattern, use `import.meta.env` for Vite environment variables, add build-time validation
-
-**No Error Logging or Monitoring:**
-- Problem: Form submission errors logged only to browser console. No centralized error tracking for production failures.
-- Blocks: Cannot diagnose why forms fail in production. Cannot track user issues.
-- Fix: Integrate error tracking service (Sentry, LogRocket) or implement basic server-side error logging
-
-**No Loading States for CDN Images:**
-- Problem: If cdn.builder.io is slow, page appears blank for seconds. No skeleton loaders or placeholders.
-- Blocks: Poor user experience on slow connections
-- Fix: Add loading skeleton or blurred placeholder while images load
-
-**No Analytics Tracking:**
-- Problem: Cannot see which features users view, form conversion rate, or which CTAs are clicked
-- Blocks: Cannot measure product performance or user engagement
-- Fix: Add Plausible, Fathom, or Google Analytics integration
+**Hard-coded download links block release workflow:**
+- Files: `src/routes/+page.svelte` (lines 188-189), `src/routes/new-12345/+page.svelte` (lines 213-214)
+- Why fragile: Manual string edits prone to typos; easy to miss when releasing; version number changes break existing links
+- Safe modification: See "Manual release URL updates" in Tech Debt section
 
 ## Scaling Limits
 
-**Formspree Form Integration Limitations:**
-- Current capacity: Formspree free tier supports ~50 emails/month typically
-- Limit: Once app reaches more than ~50 registrations/month, free tier quota exceeded
-- Scaling path: Upgrade to Formspree paid plan OR migrate to custom form backend service
+**Email capture via Formspree has no growth plan:**
+- Current capacity: Formspree free tier typical limits (check their docs)
+- Limit: If registration becomes popular, will hit Formspree rate limits or cost increases; no opt-in email backend
+- Scaling path:
+  - Switch to server-side email backend (nodemailer, SendGrid, AWS SES)
+  - Implement database to store emails (SQLite, Postgres, Firebase)
+  - Add unsubscribe link and list management
+  - Track engagement metrics (open rates, click rates)
 
-**CDN Asset Delivery:**
-- Current capacity: builder.io CDN is designed for high-traffic sites
-- Limit: If app becomes popular, builder.io may rate-limit or remove free tier access
-- Scaling path: Self-host screenshots in `/static` or use S3/Netlify/Vercel CDN
+## Dependencies at Risk
 
-## Code Quality Issues
+**Lucide icon package duplication:**
+- Risk: `package.json` depends on both `@lucide/svelte` (v1.23.0) and `lucide-svelte` (v1.0.1) — unclear why two versions
+- Files: `package.json` lines 45-46
+- Impact: Unnecessary bundle bloat; confusion about which to import
+- Migration plan: Remove one (likely `lucide-svelte` is stale); audit code to confirm only one is used
 
-**No TypeScript Strict Typing in Some Areas:**
-- Issue: Form data not typed. Fetch response not typed. Error object in catch not typed.
-- Files: `src/routes/+page.svelte` (lines 124-153)
-- Impact: Runtime errors possible, IDE autocomplete limited
-- Fix: Define FormData interface, response interfaces from Formspree API, type error as unknown
+**No lock file for reproducible builds (warning):**
+- Risk: `package-lock.json` exists and should be committed, but verify it's in version control
+- Files: `.gitignore`, `package-lock.json`
+- Impact: If CI uses wrong Node/npm version or cache is cleared, builds may be non-reproducible
+- Mitigation: Enforce `.nvmrc` (set to 22) in CI and locally
 
-**Inconsistent Naming:**
-- Issue: Variable names: `formSubmitted`, `formLoading`, `formError`, `activeScreenshot`, `downloadLinks`, `screenshots` - mix of past tense and present
-- Files: `src/routes/+page.svelte`
-- Impact: Confuses intent, harder to maintain
-- Fix: Standardize to present tense (`isFormSubmitted`, `isFormLoading`, `formErrorMessage`, `currentScreenshotIndex`)
+## Missing Critical Features
 
-**Magic Numbers and Strings:**
-- Issue: Hardcoded animation delays (1000ms), blur pixel values (10px, 6px), button classes, colors
-- Files: `src/routes/+page.svelte` (multiple lines), `src/lib/BlurredScreenshot.svelte`
-- Impact: Difficult to maintain, magic values scattered, no single source of truth for theme
-- Fix: Extract to `src/lib/constants.ts` or Tailwind config
+**Windows .exe not available:**
+- Problem: Product marketed as desktop app but Windows version missing; download button commented out
+- Blocks: Windows users from downloading; roadmap credibility questioned
+- Status: Awaiting macOS Electron build; architecture TBD
 
-**Inlined Styles and Classes:**
-- Issue: Blur region styles inlined in template: `style="top: {region.top}; left: {region.left}; width: {region.width}; height: {region.height};"`
-- Files: `src/routes/+page.svelte` (line 322), `src/lib/BlurredScreenshot.svelte` (line 21)
-- Impact: Cannot reuse blur region styling, difficult to test, hard to modify in one place
-- Fix: Extract to component prop or Svelte store
+**Privacy Policy and Terms not published:**
+- Problem: Site collects emails but has no policy; tax/financial app with no disclaimers
+- Blocks: Wide promotion; potential compliance issues depending on jurisdiction
+- Status: Footer has placeholder link but page doesn't exist
 
-**No Input Sanitization:**
-- Issue: Form inputs (name, email) sent directly to Formspree with no sanitization
-- Files: `src/routes/+page.svelte` (lines 541-555)
-- Impact: If ever displayed back or used server-side, XSS risk
-- Fix: Sanitize with DOMPurify or equivalent before submission/display
+## Test Coverage Gaps
+
+**No integration tests for form submission:**
+- What's not tested: `handleFormSubmit()` in both routes — form data validation, Formspree fetch, error handling, success state
+- Files: `src/routes/+page.svelte` (lines 166-199), `src/routes/new-12345/+page.svelte` (lines 191-224)
+- Risk: Silent failures; Formspree ID could be wrong and undetected until user tries to register
+- Priority: High — form is critical feature
+
+**No tests for compliance ticker animation:**
+- What's not tested: Ticker scroll loop, pause/resume, reduce-motion respects, mobile breakpoint
+- Files: `src/routes/+page.svelte` (lines 22-62), `src/routes/new-12345/+page.svelte` (lines 47-87)
+- Risk: Animation could break silently; accessibility (prefers-reduced-motion) not validated
+- Priority: Medium — visual feature, but affects UX
+
+**No tests for screenshot carousel logic:**
+- What's not tested: Next/previous navigation, wrapping at boundaries, thumbnail selection
+- Files: `src/routes/+page.svelte` (lines 119-125), `src/routes/new-12345/+page.svelte` (lines 144-150)
+- Risk: Off-by-one errors, broken carousel interaction undetected
+- Priority: Medium — core UX feature
+
+**No E2E tests:**
+- What's not tested: Full user flow (view page → scroll → click register → submit form → see download links)
+- Files: Entire site
+- Risk: Regression in layout, navigation, or form flow not caught
+- Priority: High — landing page is the whole product interface
+
+**Existing tests are placeholder-level:**
+- Files: `src/demo.spec.ts` (1+2=3 assertion), `src/routes/page.svelte.test.ts` (H1 exists)
+- Risk: False confidence in test coverage; test infrastructure present but unused
+- Priority: High — tests should provide real value
 
 ---
 
-*Concerns audit: 2026-07-03*
+*Concerns audit: 2026-07-06*

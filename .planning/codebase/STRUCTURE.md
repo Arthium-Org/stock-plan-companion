@@ -1,223 +1,274 @@
 # Codebase Structure
 
-**Analysis Date:** 2026-07-03
+**Analysis Date:** 2026-07-06
 
 ## Directory Layout
 
 ```
 stock-plan-companion/
-├── .claude/                    # Claude Code configuration & workflows
-├── .git/                       # Git version control
-├── .planning/                  # GSD planning documents
-│   └── codebase/              # Codebase analysis (this directory)
-├── node_modules/              # Dependencies (not committed)
-├── src/                       # Source code
-│   ├── lib/                   # Reusable components and utilities
-│   │   ├── BlurredScreenshot.svelte
-│   │   └── index.ts
-│   ├── routes/                # SvelteKit route files
-│   │   ├── +layout.svelte     # Root layout (global styles)
-│   │   ├── +page.svelte       # Home page (landing page)
-│   │   └── page.svelte.test.ts
-│   ├── static/                # Static assets (favicon, etc)
-│   │   └── favicon.svg
-│   ├── app.css                # Global Tailwind directives
-│   ├── app.d.ts               # TypeScript declarations
-│   └── app.html               # Root HTML template
-├── static/                    # Public static files served as-is
+├── src/
+│   ├── routes/                    # SvelteKit file-based routes (each dir = URL path)
+│   │   ├── +page.svelte           # Landing page (/) — main content, forms, galleries
+│   │   ├── +layout.svelte         # Root layout wrapper (all routes inherit)
+│   │   ├── +layout.ts             # Layout data loader — prerender config
+│   │   ├── page.svelte.test.ts    # Tests for landing page (browser environment)
+│   │   └── new-12345/
+│   │       └── +page.svelte       # Preview route (/new-12345) — dark-theme prototype
+│   │
+│   ├── lib/                       # Shared components and utilities
+│   │   ├── BlurredScreenshot.svelte # Reusable component for image blurring
+│   │   └── index.ts               # Barrel export (empty; intended for exports)
+│   │
+│   ├── app.css                    # Global styles (Tailwind + custom)
+│   ├── app.d.ts                   # TypeScript ambient declarations (currently empty)
+│   ├── app.html                   # HTML template wrapper (SvelteKit auto-generates body)
+│   └── demo.spec.ts               # Utility test file (server environment)
+│
+├── static/                        # Static assets (favicon, etc.)
 │   └── favicon.svg
-├── .eslintrc.js               # ESLint configuration
-├── eslint.config.js           # ESLint config (flat config)
-├── package.json               # Project dependencies & scripts
-├── package-lock.json          # Dependency lock file
-├── postcss.config.js          # PostCSS configuration
-├── README.md                  # Project readme (outdated starter template)
-├── svelte.config.js           # SvelteKit configuration
-├── tailwind.config.js         # Tailwind CSS configuration
-├── tsconfig.json              # TypeScript configuration
-├── vite.config.ts             # Vite build configuration
-└── vitest-setup-client.ts     # Vitest browser test setup
+│
+├── build/                         # Output directory (generated on build)
+│   ├── index.html                 # Prerendered homepage
+│   ├── _app/                      # Bundled JS and CSS
+│   └── ...                        # Other prerendered pages
+│
+├── node_modules/                  # Dependencies (git-ignored)
+│
+├── .svelte-kit/                   # SvelteKit internal build artifacts (git-ignored)
+│
+├── .github/                       # GitHub Actions workflows
+│   └── workflows/                 # CI/CD pipelines
+│
+├── .planning/                     # Project planning documents
+│   └── codebase/                  # Codebase analysis (this directory)
+│       ├── ARCHITECTURE.md        # System architecture and data flow
+│       └── STRUCTURE.md           # This file
+│
+├── .claude/                       # Claude Code configuration and utilities
+│   ├── agents/                    # Custom agents/skills
+│   ├── hooks/                     # Custom hooks
+│   ├── scripts/                   # Utility scripts
+│   ├── commands/                  # Custom commands
+│   ├── gsd-core/                  # GSD (Get Shit Done) framework
+│   └── settings.json              # Claude Code settings
+│
+├── svelte.config.js               # SvelteKit configuration (adapter-static, prerender)
+├── vite.config.ts                 # Vite + Vitest configuration
+├── tsconfig.json                  # TypeScript compiler options
+├── tailwind.config.js             # Tailwind CSS theme and content paths
+├── postcss.config.js              # PostCSS plugins (Tailwind autoprefixer)
+├── eslint.config.js               # ESLint configuration (Svelte + Prettier)
+├── .prettierrc                    # Prettier formatter config
+├── .prettierignore                # Prettier ignore rules
+├── .npmrc                         # npm configuration
+├── .nvmrc                         # Node version (22+)
+├── .gitignore                     # Git ignore rules
+│
+├── package.json                   # Dependencies and scripts
+├── package-lock.json              # Locked dependency versions
+│
+├── README.md                      # Project overview
+├── AGENTS.md                      # Claude agents/skills documentation
+├── builder.config.json            # Builder.io asset configuration
+└── vitest-setup-client.ts         # Vitest browser test setup
 ```
 
 ## Directory Purposes
 
-**`src/`:**
-- Purpose: All source code for the application
-- Contains: Svelte components, routes, utilities, styles, types
-- Key files: `app.html`, `app.css`
-
 **`src/routes/`:**
-- Purpose: SvelteKit file-based routing
-- Contains: Page components (`+page.svelte`), layouts (`+layout.svelte`), and route-specific tests
-- Key files: `+layout.svelte` (global layout), `+page.svelte` (home page)
+- Purpose: SvelteKit file-based routing. Each `.svelte` file is a page route. Directories become URL paths.
+- Contains: Page components (`+page.svelte`), layouts (`+layout.svelte`), data loaders (`+layout.ts`), tests (`*.test.ts`, `*.spec.ts`)
+- Key files:
+  - `+page.svelte`: Home page — main landing page with hero, features, galleries, forms
+  - `+layout.svelte`: Root layout — wraps all routes, injects global styles
+  - `+layout.ts`: Prerender configuration (sets `export const prerender = true`)
+  - `new-12345/+page.svelte`: Alternative dark-theme UI prototype
 
 **`src/lib/`:**
-- Purpose: Reusable components and utilities shared across routes
-- Contains: Svelte components, utility functions, types
-- Key files: `BlurredScreenshot.svelte` (component for rendering images with blur overlays)
+- Purpose: Shared components, utilities, and library code reused across routes
+- Contains: Svelte components (`.svelte`), TypeScript utilities (`.ts`), barrel exports
+- Key files:
+  - `BlurredScreenshot.svelte`: Component for rendering images with blurred sensitive regions
+  - `index.ts`: Barrel export file (currently empty; intended for re-exporting library code)
+
+**`src/app.css`:**
+- Purpose: Global styles, animations, theme system, utility component classes
+- Contains: Tailwind directives (@tailwind, @layer), CSS custom properties (--bg, --text, etc.), keyframe animations, responsive media queries
+- Patterns:
+  - `@layer base`: Browser resets (scroll-behavior, body colors)
+  - `@layer components`: Reusable utility classes (`.btn-primary`, `.section-container`, `.compliance-ticker`)
+  - `.spc-v2` theme: Dark theme prototype scoped for `/new-12345` route (CSS variable system for light/dark modes)
 
 **`static/`:**
-- Purpose: Public static assets served directly by the web server
-- Contains: Favicon, images, fonts, etc.
-- Committed: Yes
-- Generated: No
+- Purpose: Public static assets served as-is (not processed by Vite)
+- Contains: Favicon, downloadable files, static images
+- Note: External images loaded from CDN (Builder.io) rather than static directory
+
+**`build/`:**
+- Purpose: Output directory containing prerendered static site (generated on `npm run build`)
+- Contains: HTML pages, CSS/JS bundles, assets
+- Git-ignored (regenerated on each build)
+
+**`.svelte-kit/`:**
+- Purpose: SvelteKit internal artifacts and generated TypeScript config
+- Git-ignored (auto-generated)
+
+**`.github/workflows/`:**
+- Purpose: GitHub Actions CI/CD pipelines
+- Contains: Build and deploy workflows
+
+**`.planning/codebase/`:**
+- Purpose: Codebase analysis documents (generated by `/gsd-map-codebase`)
+- Contains: ARCHITECTURE.md, STRUCTURE.md, and related analysis
 
 **`.claude/`:**
-- Purpose: Claude Code configuration and AI workflows
-- Contains: Agent definitions, skills, settings, hooks
-
-**`.planning/`:**
-- Purpose: GSD project planning and codebase analysis documents
-- Contains: Phase plans, codebase structure docs, architecture analysis
+- Purpose: Claude Code project configuration
+- Contains: Agents, hooks, scripts, GSD framework, settings
 
 ## Key File Locations
 
 **Entry Points:**
-- `src/app.html`: Root HTML template — renders SvelteKit body placeholder
-- `src/routes/+layout.svelte`: Root layout component — imports global styles, wraps all pages
-- `src/routes/+page.svelte`: Home/landing page — main marketing website content
+- `src/routes/+page.svelte`: Main landing page (/)
+- `src/routes/new-12345/+page.svelte`: Preview/prototype route (/new-12345)
+- `src/app.html`: HTML template wrapper (processed by SvelteKit)
 
 **Configuration:**
-- `package.json`: Project dependencies, npm scripts
-- `vite.config.ts`: Vite/SvelteKit build settings, test configuration
-- `svelte.config.js`: SvelteKit adapter (auto), preprocessor setup
-- `tailwind.config.js`: Tailwind theme, animations, plugins
-- `tsconfig.json`: TypeScript strict mode, module resolution
-- `eslint.config.js`: ESLint rules for TypeScript, Svelte
-- `.eslintrc.js`: ESLint configuration file
+- `svelte.config.js`: SvelteKit config (adapter-static, prerender settings)
+- `vite.config.ts`: Vite build config and Vitest test runner settings
+- `tsconfig.json`: TypeScript compiler options
+- `tailwind.config.js`: Tailwind theme tokens and content paths
+- `eslint.config.js`: ESLint linting rules
+- `.prettierrc`: Prettier formatting rules
 
-**Core Styling:**
-- `src/app.css`: Global Tailwind directives, custom component classes (`.btn-primary`, `.btn-secondary`, `.section-container`)
-- `tailwind.config.js`: Theme extensions (colors, animations)
-
-**Components:**
-- `src/lib/BlurredScreenshot.svelte`: Reusable component for images with privacy blur regions
-- `src/routes/+page.svelte`: Main page component (large, ~680 lines) with all marketing content
+**Core Logic:**
+- `src/routes/+page.svelte`: All landing page content, forms, galleries, ticker logic (~780 lines)
+- `src/lib/BlurredScreenshot.svelte`: Image blur component
+- `src/app.css`: Global styles and animations
 
 **Testing:**
-- `src/demo.spec.ts`: Example unit test (basic math)
-- `src/routes/page.svelte.test.ts`: Browser-based component test using vitest-browser-svelte
-- `vitest-setup-client.ts`: Test setup file for browser environment
-- `vite.config.ts`: Test configuration (browser and node test projects)
-
-**Assets:**
-- `static/favicon.svg`: Website favicon
+- `src/routes/page.svelte.test.ts`: Browser tests (Vitest + Playwright)
+- `src/demo.spec.ts`: Example unit test (server environment)
+- `vitest-setup-client.ts`: Vitest browser setup file
 
 ## Naming Conventions
 
 **Files:**
-- Components: PascalCase (e.g., `BlurredScreenshot.svelte`)
-- Route files: Leading `+` for special files (e.g., `+page.svelte`, `+layout.svelte`)
-- Tests: `.test.ts` or `.spec.ts` suffix
-- Config: `<name>.config.js` or `<name>.config.ts`
+- **Pages**: `+page.svelte` (SvelteKit convention)
+- **Layouts**: `+layout.svelte` (SvelteKit convention)
+- **Data loaders**: `+layout.ts` or `+page.ts` (SvelteKit convention)
+- **Components**: PascalCase (e.g., `BlurredScreenshot.svelte`)
+- **Tests**: Suffix with `.test.ts` or `.spec.ts` (Vitest convention)
+- **Config files**: Flat names with extension (e.g., `svelte.config.js`, `tailwind.config.js`)
 
 **Directories:**
-- Lowercase, descriptive names (e.g., `routes`, `lib`, `static`)
-- Grouped by purpose: `src/routes/` for routes, `src/lib/` for shared code
-
-**Variables & Functions:**
-- camelCase for variables and functions (e.g., `formSubmitted`, `handleFormSubmit`)
-- PascalCase for exported types and components
-- UPPER_SNAKE_CASE for constants (if any)
+- **Feature routes**: Lowercase, kebab-case (e.g., `new-12345/`) — becomes URL path
+- **Library**: `lib/` (SvelteKit convention)
+- **Static**: `static/` (SvelteKit convention)
+- **Config**: Root level (e.g., `src/app.css`)
 
 **CSS Classes:**
-- kebab-case for Tailwind utility classes (built-in)
-- Custom component classes: kebab-case in `@layer components` (e.g., `.btn-primary`, `.blur-date-id`)
+- **Tailwind utility**: Lowercase with hyphens (e.g., `flex`, `gap-2`, `text-gray-600`)
+- **Component utilities**: Kebab-case (e.g., `.btn-primary`, `.section-container`, `.compliance-ticker`)
+- **Theme system**: BEM-like (e.g., `.spc-v2`, `.spc-v2.dark`, `.spc-v2 .card`)
 
-**TypeScript:**
-- Interfaces/Types: PascalCase (e.g., `Feature`, `Screenshot`)
-- Props exported from components use TypeScript `export let` syntax
+**Component Props (Svelte):**
+- **Exports**: PascalCase or camelCase (e.g., `export let src: string`, `export let blurRegions`)
+- **Reactive variables**: camelCase (e.g., `let formSubmitted = false`)
+- **Event handlers**: camelCase verb prefix (e.g., `handleFormSubmit`, `nextScreenshot`)
 
 ## Where to Add New Code
 
-**New Marketing Section (Hero, Features, etc):**
-- **Location:** `src/routes/+page.svelte`
-- **Approach:** Add HTML section following existing pattern; add data to component script if needed
-- **Example:** New section for testimonials would add `<section>` tags around line 232-600
-
-**New Reusable Component:**
-- **Location:** `src/lib/` (e.g., `src/lib/MyComponent.svelte`)
-- **Approach:** Export props with `export let` syntax; use Svelte 5 reactive variables for state
-- **Testing:** Create companion test file at `src/lib/MyComponent.svelte.test.ts`
-
 **New Page/Route:**
-- **Location:** `src/routes/[route-name]/+page.svelte`
-- **Approach:** Create directory with route name, add `+page.svelte` file
-- **Layout:** Can reuse root `+layout.svelte` or create route-specific layout
+1. Create directory under `src/routes/` (e.g., `src/routes/features/`)
+2. Add `+page.svelte` in that directory — becomes `/features` route
+3. Import components from `src/lib/`
+4. Use Tailwind classes and `src/app.css` utilities
+5. (Optional) Add `+layout.ts` in parent directory for route-specific data/prerender settings
 
-**Utility Functions:**
-- **Location:** `src/lib/utils/` (create if doesn't exist)
-- **Approach:** Export named functions; keep pure (no side effects)
-- **Example:** Form validation, data formatting
+**New Component/Module:**
+1. Create `.svelte` file in `src/lib/` (e.g., `src/lib/FeatureCard.svelte`)
+2. Export props via `export let` statements
+3. Use Tailwind classes and global CSS utilities
+4. Add scoped `<style>` for component-specific styling
+5. Re-export in `src/lib/index.ts` for easier imports
 
-**Global Styles:**
-- **Location:** `src/app.css`
-- **Approach:** Use `@layer` directives to organize (base, components, utilities)
-- **Example:** New button variant goes in `@layer components`
+**Utilities:**
+- Shared TypeScript functions: `src/lib/utils.ts` or similar
+- Use `$lib` path alias (auto-configured by SvelteKit) for imports: `import { foo } from '$lib/utils.ts'`
+
+**Styles:**
+- Global styles, animations, theme tokens: `src/app.css` (@layer directives)
+- Component-scoped styles: `<style>` block in `.svelte` file
+- Utility classes: Tailwind + custom classes in `src/app.css`
+- Theme variations: Add CSS variable sections in `.spc-v2` block (or create new `.theme-name` block)
 
 **Tests:**
-- **Unit Tests:** `src/**/*.test.ts` or `src/**/*.spec.ts` (Node environment by default)
-- **Browser/Component Tests:** `src/**/*.svelte.test.ts` or `src/**/*.svelte.spec.ts` (browser environment)
-- **Test Setup:** Leverage `vitest.config.ts` projects for browser/node environments
+- Browser tests (component rendering): `src/routes/page.svelte.test.ts` (or create `src/lib/Component.svelte.test.ts`)
+- Server-side tests: `src/lib/utils.spec.ts`
+- Use Vitest + Playwright for browser tests, standard Vitest for Node tests
+- Run tests: `npm test`
 
-**Configuration Changes:**
-- **Tailwind:** Edit `tailwind.config.js` (colors, spacing, animations)
-- **Build/Runtime:** Edit `vite.config.ts` or `svelte.config.js`
-- **Linting:** Edit `eslint.config.js`
+**Build Configuration:**
+- Add Vite plugins: Edit `vite.config.ts`
+- Add Tailwind theme: Edit `tailwind.config.js` (extend theme or add plugins)
+- Add ESLint rules: Edit `eslint.config.js`
+- Add TypeScript strict modes: Edit `tsconfig.json`
 
 ## Special Directories
 
-**`node_modules/`:**
-- Purpose: Third-party dependencies installed by npm
-- Generated: Yes (by npm install)
-- Committed: No
-- Do not edit or commit
+**`build/`:**
+- Purpose: Prerendered static site output
+- Generated: Yes (on `npm run build`)
+- Committed: No (git-ignored; regenerated on deploy)
+- Deployed to: GitHub Pages
 
 **`.svelte-kit/`:**
-- Purpose: SvelteKit generated artifacts, types, configuration
-- Generated: Yes (by svelte-kit sync)
-- Committed: No
-- Do not edit manually
+- Purpose: SvelteKit internal build artifacts and generated types
+- Generated: Yes (on `npm install` and build)
+- Committed: No (git-ignored)
 
-**`.git/`:**
-- Purpose: Git version control metadata
-- Generated: Yes (by git init)
-- Committed: N/A (is version control)
+**`node_modules/`:**
+- Purpose: Installed npm dependencies
+- Generated: Yes (on `npm install`)
+- Committed: No (git-ignored; use `package-lock.json` for reproducible installs)
 
-**`.planning/codebase/`:**
-- Purpose: Codebase analysis documents (ARCHITECTURE.md, STRUCTURE.md, etc)
-- Generated: No (manually created by analysis tools)
-- Committed: Yes
+**`static/`:**
+- Purpose: Public assets served from root (not processed by build tool)
+- Generated: No (manually created)
+- Committed: Yes (source files)
+- Deployed: Yes (copied to `build/` on deploy)
 
-## Import Path Aliases
+**`.claude/`:**
+- Purpose: Claude Code project-specific configuration, agents, hooks
+- Generated: Yes (scripts, build artifacts in subdirectories)
+- Committed: Yes (source files, scripts, configuration)
+- User-specific: `.claude/settings.json` can be overridden locally
 
-SvelteKit provides built-in path aliases:
-
-- `$lib/` → `src/lib/` (for importing reusable components/utilities)
-- `$app/` → SvelteKit app module
-- `$env/` → Environment variables
-
-**Examples:**
-```typescript
-import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
-import { page } from '$app/stores';
-```
+**`.planning/`:**
+- Purpose: Project planning and codebase analysis
+- Generated: Yes (via `/gsd-map-codebase`, `/gsd-plan-phase` commands)
+- Committed: Yes (planning documents)
+- Contents: ARCHITECTURE.md, STRUCTURE.md, PLAN.md, analysis files
 
 ## Build Output
 
-**Development Build:**
-- Command: `npm run dev`
-- Output: In-memory virtual module served by Vite dev server (http://localhost:5173)
+**Prerender Process:**
+1. `npm run build` runs Vite
+2. Vite compiles TypeScript, Svelte, CSS
+3. SvelteKit prerender runs with `export const prerender = true` from `src/routes/+layout.ts`
+4. All routes prerendered to static HTML files in `build/` directory
+5. Assets bundled into `build/_app/immutable/`
 
-**Production Build:**
-- Command: `npm run build`
-- Output: `.svelte-kit/output/` directory (adapter-auto generates for target platform)
-- Static files: `build/` directory can be deployed
+**Output structure:**
+- `build/index.html` — Prerendered homepage
+- `build/_app/immutable/*.css` — Bundled CSS files
+- `build/_app/immutable/*.js` — Bundled JavaScript (hydration code)
+- `build/404.html` — Fallback for 404 errors
 
-**Preview Build:**
-- Command: `npm run preview`
-- Output: Local preview of production build (http://localhost:4173)
+**Deployment:**
+- `build/` directory pushed to GitHub Pages via GitHub Actions
+- Static files served directly (no server required)
 
 ---
 
-*Structure analysis: 2026-07-03*
+*Structure analysis: 2026-07-06*

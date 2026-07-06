@@ -1,215 +1,249 @@
-<!-- refreshed: 2026-07-03 -->
+<!-- refreshed: 2026-07-06 -->
 # Architecture
 
-**Analysis Date:** 2026-07-03
+**Analysis Date:** 2026-07-06
 
 ## System Overview
 
-This is a **marketing website landing page** for Stock Plan Companion, a desktop application for managing RSUs and ESPPs. The architecture is client-side only with no backend API layer.
-
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                      Browser (Client)                        │
-├──────────────────┬──────────────────┬───────────────────────┤
-│  Page Component  │  Components      │   Event Handlers      │
-│  `+page.svelte`  │  `Blurred...`    │   Form submission     │
-│                  │  `BlurredScreens.`│  Screenshot nav      │
-└────────┬─────────┴────────┬─────────┴──────────────┬────────┘
-         │                  │                        │
-         ▼                  ▼                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    SvelteKit Runtime                         │
-│  `+layout.svelte` — Global CSS, children renderer           │
-└────────┬─────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Styling & Assets                          │
-│  Tailwind CSS    │   SVG Icons      │   Image CDN            │
-│  `app.css`       │   `lucide-svelte`│   `cdn.builder.io`     │
-└─────────────────────────────────────────────────────────────┘
-         │
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│              External Services (Client-Initiated)           │
-│  CDN Images          │   Formspree (Email)                   │
-│  `builder.io`        │   Form submission → email delivery    │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    SvelteKit Router (Client)                     │
+│         File-based routes → Prerendered HTML pages               │
+│  `src/routes/+page.svelte`, `src/routes/+layout.svelte`          │
+└────────────┬──────────────────────────┬────────────┬─────────────┘
+             │                          │            │
+             ▼                          ▼            ▼
+┌──────────────────────┐  ┌──────────────────────┐  ┌─────────────┐
+│  UI Components       │  │ Component Library    │  │  Static     │
+│  (Svelte .svelte)    │  │  `src/lib/`          │  │  Assets     │
+│  - Landing Page      │  │  - Blurred Screenshot│  │  CDN Images │
+│  - Forms             │  │    Component         │  │  GitHub     │
+│  - Galleries         │  └──────────────────────┘  │  Links      │
+│  - Compliance Ticker │                            └─────────────┘
+│  `src/routes/`       │
+└──────────┬───────────┘
+           │
+           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              Styling Layer (Tailwind + Custom CSS)               │
+│         `src/app.css` - Global styles, animations, themes        │
+└──────────────────────┬──────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   External Services                              │
+│  - Formspree (form submissions)                                  │
+│  - Builder.io CDN (screenshot images)                            │
+│  - GitHub (links, downloads)                                     │
+│  - Third-party news/docs (compliance info links)                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Component Responsibilities
 
 | Component | Responsibility | File |
 |-----------|----------------|------|
-| **Layout** | Wraps all pages with global CSS imports and provides children rendering context | `src/routes/+layout.svelte` |
-| **Page** | Main marketing landing page; manages screenshot gallery, form state, and all content sections | `src/routes/+page.svelte` |
-| **BlurredScreenshot** | Reusable component for displaying images with configurable blur regions for privacy | `src/lib/BlurredScreenshot.svelte` |
+| Root Layout | Inject global styles, render children via slot pattern | `src/routes/+layout.svelte` |
+| Landing Page | Main content: hero, features, screenshots gallery, registration form | `src/routes/+page.svelte` |
+| BlurredScreenshot | Render image with sensitive regions blurred via backdrop-filter | `src/lib/BlurredScreenshot.svelte` |
+| Preview Route | Alternative dark-theme UI prototype (scoped CSS variables) | `src/routes/new-12345/+page.svelte` |
+| Layout Config | Set prerender: true for static site generation | `src/routes/+layout.ts` |
+| Global Styles | Tailwind directives, animations, utility classes, theme system | `src/app.css` |
 
 ## Pattern Overview
 
-**Overall:** Single-page landing site with client-only state management. This is a **static marketing website** pattern with interactive elements (screenshot carousel, contact form).
+**Overall:** Static Site Generation (SSG) with pre-rendered HTML pages deployed to GitHub Pages. Client-side interactivity via Svelte components.
 
 **Key Characteristics:**
-- **No Backend:** All content is hardcoded in the page component; no API routes or server logic
-- **Client State Only:** Component state managed with Svelte 5 reactive variables (no external state library needed)
-- **External Service Integration:** Email form submission via Formspree; images served from CDN
-- **Static Content:** Screenshots, features, and copy are all defined in `+page.svelte`
+- **Framework**: SvelteKit 2.x with `adapter-static`
+- **Build**: Vite → prerendered HTML/CSS/JS → `build/` directory
+- **Rendering**: 100% static (all pages prerendered at build time)
+- **Interactivity**: Client-side Svelte reactivity (forms, galleries, auto-scrolling ticker)
+- **Styling**: Tailwind CSS with PostCSS + custom component classes
+- **Deployment**: GitHub Pages (static hosting)
 
 ## Layers
 
-**Client UI Layer:**
-- Purpose: Render marketing page sections, handle user interactions (form, screenshot navigation)
+**Route Layer (Pages):**
+- Purpose: Define URL paths and entry points to the application
 - Location: `src/routes/`
-- Contains: Svelte components and route files
-- Depends on: Tailwind CSS, lucide-svelte icons, external APIs
-- Used by: Browser
+- Contains: Svelte page components (`+page.svelte`), layout wrappers (`+layout.svelte`), data loaders (`+layout.ts`)
+- Depends on: Component library (`src/lib/`), styling (`src/app.css`)
+- Used by: Browser — routes match file paths directly (SvelteKit convention)
 
-**Component Library:**
-- Purpose: Reusable Svelte components shared across pages
+**Component Layer:**
+- Purpose: Reusable UI building blocks with encapsulated logic and styling
 - Location: `src/lib/`
-- Contains: `BlurredScreenshot.svelte` component
-- Depends on: Svelte reactivity, CSS
-- Used by: Page components
+- Contains: Svelte components (`.svelte` files)
+- Depends on: External libraries (Lucide icons), global styles
+- Used by: Route components and other components
 
 **Styling Layer:**
-- Purpose: Global styles, Tailwind configuration, custom CSS components
-- Location: `src/app.css`, `tailwind.config.js`
-- Contains: Tailwind directives, custom component classes (`.btn-primary`, `.section-container`)
-- Depends on: Tailwind CSS processor, PostCSS
-- Used by: All Svelte components
+- Purpose: Define theme tokens, animations, utility classes, and reset styles
+- Location: `src/app.css`
+- Contains: Tailwind directives (@tailwind, @layer), CSS custom properties (--bg, --text, etc.), keyframe animations
+- Depends on: Tailwind CSS
+- Used by: All components via Tailwind class names and @apply directives
 
-**Build & Runtime:**
-- Purpose: Development server, bundling, type checking
-- Location: Configuration files (`vite.config.ts`, `svelte.config.js`, `tsconfig.json`)
-- Contains: Vite plugin configuration, SvelteKit adapter setup
-- Depends on: Vite, SvelteKit, TypeScript
-- Used by: Development and production builds
+**Static Assets:**
+- Purpose: Images, icons, downloadable files, externally hosted resources
+- Location: `static/` (local assets), CDN (external images)
+- Contains: Favicon, downloaded files
+- Depends on: None (served as-is)
+- Used by: Components and browser requests
 
 ## Data Flow
 
-### Primary Request Path (Page Load & Render)
+### Primary Request Path: Page Load → Render → Interact
 
-1. Browser requests landing page → SvelteKit router matches `/` route
-2. SvelteKit loads `src/routes/+layout.svelte` → imports global styles from `src/app.css`
-3. SvelteKit loads `src/routes/+page.svelte` → component mounts with reactive state
-4. Page renders 6 sections: Hero, Features, Screenshots, Status, Getting Started, Registration
-5. Lucide icons loaded client-side from `@lucide/svelte`
-6. BlurredScreenshot components render images from CDN with blur overlays
+1. Browser requests `/` (or any route)
+2. SvelteKit serves prerendered HTML from `build/` directory
+3. Browser parses HTML, loads CSS and JavaScript
+4. JavaScript hydrates Svelte components with event listeners
+5. Component mounts handlers: auto-scrolling ticker, form submission, gallery navigation
 
-**File references:**
-- Entry: `src/app.html` (renders `%sveltekit.body%`)
-- Route: `src/routes/+page.svelte` (lines 24-80 define screenshot data)
-- Styling: `src/app.css` (applied via `<script>` import in `+layout.svelte`)
+**Specific file involvement:**
+- Browser → `build/index.html` (prerendered from `src/routes/+page.svelte`)
+- Styles loaded: `build/_app/immutable/*.css`
+- Scripts loaded: `build/_app/immutable/*.js`
 
-### Form Submission Flow
+### Secondary Flow: Form Submission
 
-1. User fills email/name form (lines 541-567 in `+page.svelte`)
-2. `handleFormSubmit` function intercepts submit event
-3. Fetches to Formspree endpoint with form data
-4. On success: show confirmation UI, set download links
-5. On error: display error message, allow retry
+1. User fills registration form in `src/routes/+page.svelte` (lines 556–592)
+2. Submit handler calls `handleFormSubmit()` → `fetch('https://formspree.io/f/xvzjdkaj')`
+3. Formspree validates and sends email
+4. On success: update `formSubmitted` state, show download links
+5. Links point to GitHub releases (hardcoded URLs, requires manual update per release)
 
-**State involved:**
-- `formSubmitted`: Boolean tracking if form was sent
-- `formLoading`: Boolean for disabled button state during submission
-- `formError`: Error message display
-- `downloadLinks`: Object with macOS/Windows/Linux URLs
+### Tertiary Flow: Screenshot Gallery Navigation
 
-### Screenshot Gallery Navigation
+1. User clicks "Next"/"Previous" or thumbnail in gallery (`src/routes/+page.svelte` lines 343–367)
+2. Click handler updates `activeScreenshot` reactive variable
+3. Svelte reactively renders new image URL and metadata
+4. `BlurredScreenshot` component blurs sensitive regions on mount
 
-1. User clicks "Next" or "Previous" button
-2. Event handlers update `activeScreenshot` index (reactive variable)
-3. Svelte re-renders with new screenshot data from `screenshots` array
-4. BlurredScreenshot component receives new `src` and `blurRegions` props
-5. Blur regions reapply on new image
+### Compliance Ticker: Auto-Scroll with User Pause
 
-**File reference:** `src/routes/+page.svelte` lines 82-88 (navigation functions)
+1. Component mounts, sets up `requestAnimationFrame` loop (`src/routes/+page.svelte` lines 22–62)
+2. Loop increments scroll position by ~30px/second on desktop (not mobile)
+3. On hover/focus: pause flag set, scroll position frozen
+4. Content duplicated in DOM so ticker loops seamlessly
+
+**State Management:**
+- All state is local to components (reactive variables via `let` declarations)
+- No global state management (Svelte stores not used)
+- Form state: `formSubmitted`, `formLoading`, `formError`, `downloadLinks`
+- Gallery state: `activeScreenshot`
+- Ticker state: `paused`, `target`, internal RAF loop
 
 ## Key Abstractions
 
-**Screenshot Object:**
-- Purpose: Encapsulate image URL, title, description, and blur region definitions
-- Examples: `screenshots[0]` = Portfolio View screenshot
-- Pattern: Array of objects with `src`, `title`, `description`, `blurRegions` properties
-- Usage: Drives gallery navigation, info panel, thumbnail selection
+**Page Layout Architecture:**
+- Purpose: Two-column responsive grid on desktop, single-column on mobile
+- Examples: `src/routes/+page.svelte` lines 227–270 define grid with sidebar
+- Pattern: CSS Grid with `lg:` breakpoints; sidebar sticky on desktop, stacks below hero on mobile
 
-**Feature Object:**
-- Purpose: Represent a single feature for the Features section
-- Examples: "Import E*TRADE Documents", "Track RSUs and ESPPs"
-- Pattern: Objects with `icon` (Lucide component), `title`, `description`
-- Usage: Iterated in template to render feature cards (lines 241-251)
+**Compliance Card System:**
+- Purpose: Render multiple informational cards (news, warnings, solutions) in a scrollable ticker
+- Examples: `src/routes/+page.svelte` lines 647–741 (snippet `complianceCards()`)
+- Pattern: Svelte snippet (reusable template) duplicated in DOM for seamless loop
 
-**Button Component Classes:**
-- Purpose: Consistent button styling across the page
-- Examples: `.btn-primary`, `.btn-secondary`
-- Pattern: Tailwind component classes defined in `src/app.css` (lines 16-22)
-- Usage: Applied to CTA buttons, form buttons, navigation buttons
+**Blurred Screenshot Component:**
+- Purpose: Mask sensitive image regions using CSS `backdrop-filter: blur()`
+- Examples: `src/lib/BlurredScreenshot.svelte`
+- Pattern: Calculate overlay positions via component props; render `<div>` with absolute positioning
+
+**Feature Cards with Highlight:**
+- Purpose: Grid of feature boxes with one marked as "PRIMARY" (wider, distinct styling)
+- Examples: `src/routes/+page.svelte` lines 282–306 (conditional styling based on `feature.highlight`)
+- Pattern: Conditional CSS classes and z-index layering
+
+**Button Component Styles:**
+- Purpose: Reusable button appearances (primary, secondary, icon buttons)
+- Examples: `.btn-primary`, `.btn-secondary` in `src/app.css` lines 16–22
+- Pattern: Tailwind @apply directives for composable utility classes
 
 ## Entry Points
 
-**Web Server Entry:**
-- Location: `src/app.html`
-- Triggers: Any HTTP request to `/` (or subroutes handled by SvelteKit)
-- Responsibilities: Render HTML skeleton, include SvelteKit body placeholder, load favicon
-
-**Application Entry:**
-- Location: `src/routes/+layout.svelte`
-- Triggers: All route loads (runs for every page)
-- Responsibilities: Import global CSS, render children slot
-
-**Main Page Entry:**
+**Homepage (`/`):**
 - Location: `src/routes/+page.svelte`
-- Triggers: Request to `/`
-- Responsibilities: Initialize page state, render all marketing sections, handle interactions
+- Triggers: Browser navigation to `/`
+- Responsibilities: Render full landing page with hero, features, gallery, registration form, compliance ticker
+
+**Preview Route (`/new-12345`):**
+- Location: `src/routes/new-12345/+page.svelte`
+- Triggers: Browser navigation to `/new-12345`
+- Responsibilities: Prototype dark-theme UI (scoped styling with CSS variables)
+
+**Root Layout:**
+- Location: `src/routes/+layout.svelte`
+- Triggers: All page renders (wraps all routes)
+- Responsibilities: Import global styles, render children slot
+
+**Layout Data Loader:**
+- Location: `src/routes/+layout.ts`
+- Triggers: On build (SvelteKit prerender)
+- Responsibilities: Set `export const prerender = true` to enable static site generation
 
 ## Architectural Constraints
 
-- **No Backend API:** All content is static/hardcoded. External integrations are client-only (CDN fetch, Formspree POST).
-- **Client-Side Only State:** No server-side session, auth, or data persistence. Form submission relies on external service.
-- **Single Page:** Only one route defined (`/`). No multi-page navigation; all content on single page.
-- **Static Content:** Screenshots, features, and text are baked into component. No CMS or dynamic content management.
-- **External Dependencies:** Relies on cdn.builder.io for images and formspree.io for email delivery. If these fail, functionality degrades.
+- **Static only**: No server-side logic. All pages prerendered at build time. External API calls (Formspree) happen client-side.
+- **Global state**: None (no Svelte stores or shared reactive state). Each component manages its own local state.
+- **Circular imports**: None detected. Imports flow: routes → lib → styles.
+- **CSS scope**: Global styles in `src/app.css`. Component-scoped styles in `<style>` blocks. Preview route uses BEM-like naming (`.spc-v2`) to isolate theme.
+- **Prerendering**: All pages prerendered (including root layout). External links must be hardcoded (no dynamic content).
+- **Client-side only**: No server functions, API endpoints, or backend integration except form submission.
+- **Event loop**: Single-threaded JavaScript execution. RAF loop for ticker animation pauses on user interaction to avoid janky scrolling.
 
 ## Anti-Patterns
 
-### Hardcoded Data in Component
+### Hardcoded Download Links in Form Handler
 
-**What happens:** Screenshot metadata, feature lists, and section text are all defined inline in `+page.svelte` (lines 18-80, 90-121)
+**What happens:** Download URLs are hardcoded in `handleFormSubmit()` response (lines 187–190 in `src/routes/+page.svelte`).
 
-**Why it's wrong:** Difficult to update content without editing component code; impossible to A/B test variations; not reusable; couples content to presentation
+**Why it's wrong:** Requires manual code change and rebuild every release. Links point to specific GitHub release tags and filenames, so any version bump breaks the links unless code is updated.
 
-**Do this instead:** Extract static content to a separate config file or object (e.g., `src/lib/content.ts`) that the component imports. This separates concerns and makes future CMS integration easier.
+**Do this instead:** 
+- Move download links to a `src/lib/config.ts` file with version number
+- OR fetch latest release metadata from GitHub API at build time via `svelte.config.js` preprocess hook
+- OR store links in `src/routes/+layout.ts` as load data passed to all pages
 
-### Unvalidated Form Submission
+### TODO Comment with Placeholder Link Updates
 
-**What happens:** Form data sent directly to Formspree without client-side validation or format checking (lines 123-157)
+**What happens:** Form response shows download links via TODO comment (line 185): `// TODO: update these direct-download URLs on EVERY release`.
 
-**Why it's wrong:** Malformed data could reach Formspree; no graceful handling of network failures; error messages are generic
+**Why it's wrong:** Manual reminder is error-prone. Release checklist item can be forgotten, leaving users with broken/stale download links.
 
-**Do this instead:** Validate form fields before submission; provide specific error feedback; consider retry logic or offline queuing
+**Do this instead:** Automate version/link updates via GitHub Actions workflow that updates config file or builds with environment variables from git tags.
+
+### Responsive Ticker Only Works on Desktop
+
+**What happens:** Compliance ticker disables auto-scroll on mobile (line 37: `!desktop.matches`), but content still duplicates and stacks visually, wasting vertical space.
+
+**Why it's wrong:** Mobile users get static tall sidebar content but no scrolling benefit. The duplicate content in DOM (line 268, `hidden lg:contents`) is unnecessary bloat on small screens.
+
+**Do this instead:** Remove ticker entirely on mobile via conditional rendering (`{#if desktop.matches}`), or render as carousel with swipe/button controls.
 
 ## Error Handling
 
-**Strategy:** Minimal error handling; external service failures result in user-facing error messages.
+**Strategy:** Try-catch around external API calls (Formspree). User-facing errors captured in component state.
 
 **Patterns:**
-- Form submission errors caught in try/catch; generic error message shown (line 153)
-- Network requests assume success path; no retry logic
-- No error logging or monitoring (errors are silent except form submission)
+- Form submission errors caught and stored in `formError` state (lines 193–197)
+- User sees error message inline (line 581)
+- No logging or error tracking (no Sentry/LogRocket)
+- Unhandled errors fall through to browser console (no global error handler)
 
 ## Cross-Cutting Concerns
 
-**Logging:** None implemented. No console logs, error reporting, or analytics.
+**Logging:** None. No logging framework. Browser console only for debugging.
 
-**Validation:** Form validation happens in HTML only (required attributes on inputs); no TypeScript validation.
+**Validation:** Form validation via HTML5 `required` attribute on email field (line 567). No custom validation logic.
 
-**Authentication:** None. This is a public landing page with no user authentication.
+**Authentication:** None. Site is public. No login, API keys, or user state.
 
-**Security:** 
-- External image CDN (builder.io) — risk if CDN is compromised
-- Formspree endpoint hardcoded as placeholder (`YOUR_FORM_ID`) — must be replaced for production
-- No CSRF protection (Formspree provides built-in protection)
+**Analytics:** Not configured. No Google Analytics, Plausible, or custom event tracking.
 
 ---
 
-*Architecture analysis: 2026-07-03*
+*Architecture analysis: 2026-07-06*
