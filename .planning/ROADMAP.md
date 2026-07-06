@@ -73,7 +73,11 @@ This milestone takes the existing, already-built arthium.org marketing site from
   3. The prominent GitHub CTA near the hero/register area is gone.
   4. A visitor scanning the page sees exactly one GitHub link, in the footer.
 
-**Plans**: TBD
+**Plans**: 0/1 plans complete
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Add shared repoUrl constant; fix nav/footer GitHub links + Contact mailto; remove hero + Open Source competing GitHub CTAs (test → edit page → visual verify)
+
 **UI hint**: yes
 
 ## Progress
@@ -85,4 +89,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|-----------------|--------|-----------|
 | 1. Download Wiring & Release Config | 1/1 | Complete   | 2026-07-06 |
 | 2. Registration Backend Migration | 2/2 | Complete    | 2026-07-06 |
-| 3. Links, Contact & CTA Cleanup | 0/TBD | Not started | - |
+| 3. Links, Contact & CTA Cleanup | 0/1 | Not started | - |
