@@ -87,6 +87,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260707-05y | Promote dark-themed landing page (with light/dark switch) to main / route; remove /new-12345; fix registration source to / and default consent checkbox on | 2026-07-07 | 43a8bdc | [260707-05y-promote-dark-themed-landing-page-with-li](./quick/260707-05y-promote-dark-themed-landing-page-with-li/) |
+| fast | Resolve 11 pre-existing eslint errors on promoted landing page (each-block keys, optional-catch bindings, external-href disable) | 2026-07-07 | df247ff | — |
 
 ## Deferred Items
 
