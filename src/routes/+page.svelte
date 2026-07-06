@@ -13,6 +13,7 @@
 		ExternalLink
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
+	import { macDownloadUrl, windowsAvailable } from '$lib/downloads';
 	import { onMount } from 'svelte';
 
 	// Auto-scrolling compliance ticker: native scroll so users can wheel/click;
@@ -65,10 +66,6 @@
 	let formLoading = false;
 	let formError = '';
 	let activeScreenshot = 0;
-	let downloadLinks = {
-		mac: '#',
-		windows: '#'
-	};
 
 	const screenshots = [
 		{
@@ -182,12 +179,6 @@
 			if (response.ok) {
 				formSubmitted = true;
 				form.reset();
-				// TODO: update these direct-download URLs on EVERY release (new tag + filename).
-				// Format: https://github.com/Arthium-Org/stock-plan-companion/releases/download/<tag>/<file>
-				downloadLinks = {
-					mac: 'https://github.com/Arthium-Org/stock-plan-companion/releases/download/v1.0.0/StockPlanCompanion-1.0.0.dmg',
-					windows: 'https://github.com/Arthium-Org/stock-plan-companion/releases/download/v1.0.0/StockPlanCompanion-1.0.0.exe'
-				};
 			} else {
 				formError = 'Failed to submit form. Please try again.';
 			}
@@ -601,14 +592,24 @@
 								</div>
 
 								<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
-									<a href={downloadLinks.mac} download class="btn-secondary text-center">
-										Download for macOS
+									<a
+										href={macDownloadUrl}
+										download
+										title="Requires Apple Silicon (M-series). Intel Macs are not supported."
+										class="btn-secondary text-center"
+									>
+										macOS (Apple Silicon)
 									</a>
-									<!-- TODO: enable once the Windows .exe is released
-									<a href={downloadLinks.windows} download class="btn-secondary text-center">
-										Download for Windows
-									</a>
-									-->
+									{#if !windowsAvailable}
+										<button
+											type="button"
+											disabled
+											aria-disabled="true"
+											class="btn-secondary cursor-not-allowed text-center opacity-60"
+										>
+											Windows (coming soon)
+										</button>
+									{/if}
 								</div>
 
 								<button
