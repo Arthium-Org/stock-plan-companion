@@ -111,9 +111,9 @@
 }
 
 /* ================================================================
-   Preview theme for the /new-12345 route ONLY.
+   Theme for the main / homepage.
    Everything is scoped under .spc-v2 (with .spc-v2.dark for dark
-   mode) so it cannot affect the current homepage or any other page.
+   mode) so it cannot affect any other page.
    ================================================================ */
 @layer components {
 	.spc-v2 {

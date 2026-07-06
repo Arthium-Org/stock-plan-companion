@@ -4,18 +4,43 @@
 		BarChart3,
 		Calendar,
 		FileCheck,
-		TrendingUp,
 		Lock,
 		BarChart2,
 		CheckCircle,
 		AlertTriangle,
 		Download,
-		ExternalLink
+		ExternalLink,
+		Sun,
+		Moon,
+		Code2,
+		ArrowRight,
+		TrendingUp
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
-	import { macDownloadUrl, windowsAvailable } from '$lib/downloads';
 	import { appsScriptUrl } from '$lib/registration';
+	import { macDownloadUrl, windowsAvailable } from '$lib/downloads';
 	import { onMount } from 'svelte';
+
+	// Theme is scoped to this page's wrapper (.spc-v2) so it never touches the
+	// rest of the site. Default dark; the wrapper renders with .dark in prerendered
+	// HTML, so there's no flash before hydration.
+	let theme: 'light' | 'dark' = 'dark';
+	onMount(() => {
+		try {
+			const t = localStorage.getItem('theme-v2');
+			if (t === 'light' || t === 'dark') theme = t;
+		} catch (e) {
+			/* ignore */
+		}
+	});
+	function toggleTheme() {
+		theme = theme === 'dark' ? 'light' : 'dark';
+		try {
+			localStorage.setItem('theme-v2', theme);
+		} catch (e) {
+			/* ignore */
+		}
+	}
 
 	// Auto-scrolling compliance ticker: native scroll so users can wheel/click;
 	// pauses on hover or keyboard focus, seamless loop via duplicated content.
@@ -203,24 +228,42 @@
 	}
 </script>
 
-<div class="min-h-screen w-full bg-white">
+<svelte:head>
+	<title>Stock Plan Companion</title>
+</svelte:head>
+
+<div class="spc-v2 min-h-screen w-full" class:dark={theme === 'dark'}>
 	<!-- Navigation -->
-	<nav class="border-b border-gray-100">
-		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
-			<div class="flex items-center gap-2">
-				<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-					<BarChart3 size={20} class="text-white" />
+	<nav class="nav-blur sticky top-0 z-50">
+		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+			<div class="flex items-center gap-3">
+				<div
+					class="flex h-9 w-9 items-center justify-center rounded-xl"
+					style="background-image: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 6px 20px -6px var(--accent-glow);"
+				>
+					<BarChart3 size={18} style="color: var(--on-accent)" />
 				</div>
-				<span class="text-xl font-semibold text-gray-900">Stock Plan Companion</span>
+				<span class="text-lg font-semibold tracking-tight t-strong">Stock Plan Companion</span>
 			</div>
-			<div class="flex items-center gap-4">
+			<div class="flex items-center gap-2 sm:gap-3">
 				<a
 					href="https://github.com/Arthium-Org/stock-plan-companion"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-gray-600 transition hover:text-gray-900"
+					class="icon-btn"
+					aria-label="GitHub"
 				>
-					GitHub
+					<Code2 size={18} />
+				</a>
+				<button on:click={toggleTheme} class="icon-btn" aria-label="Toggle color theme">
+					{#if theme === 'dark'}
+						<Sun size={18} />
+					{:else}
+						<Moon size={18} />
+					{/if}
+				</button>
+				<a href="#register" class="btn-primary hidden !px-5 !py-2.5 text-sm sm:inline-flex">
+					Get the app
 				</a>
 			</div>
 		</div>
@@ -228,31 +271,52 @@
 
 	<!-- Hero + Main Content with Sticky Compliance Sidebar -->
 	<div class="section-container mx-auto max-w-7xl py-12 sm:py-16 lg:py-20">
-		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12 relative">
+		<div class="relative grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
 			<!-- Hero (left column, row 1 on desktop) -->
 			<div class="min-w-0 lg:col-span-2 lg:col-start-1 lg:row-start-1">
-				<!-- Hero -->
 				<section class="animate-fade-in">
-					<div class="mb-6 inline-flex w-fit rounded-full bg-blue-50 px-4 py-2">
-						<span class="text-sm font-medium text-blue-700">Open source • Desktop app</span>
+					<div class="chip mb-6">
+						<span
+							class="h-2 w-2 rounded-full"
+							style="background: var(--accent); box-shadow: 0 0 10px 1px var(--accent);"
+						></span>
+						Open source · Desktop app
 					</div>
 
-					<h1 class="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-						Simplify Your E*TRADE Stock Plan Records
+					<h1
+						class="mb-6 text-4xl font-bold leading-[1.05] tracking-tight t-strong sm:text-5xl lg:text-6xl"
+					>
+						Simplify your E*TRADE<br class="hidden sm:block" />
+						<span class="gradient-text">stock plan records</span>
 					</h1>
 
-					<p class="mb-8 text-lg text-gray-600 sm:text-xl">
-						An open-source desktop application that helps organize RSU and ESPP records for Indian
-						taxpayers.
+					<p class="mb-8 max-w-xl text-lg t-muted sm:text-xl">
+						An open-source desktop app that organizes your RSU and ESPP records — and gets you
+						Schedule&nbsp;FA ready for Indian tax filing.
 					</p>
 
 					<div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
-						<a href="#register" class="btn-primary"> Register & Download </a>
+						<a href="#register" class="btn-primary">
+							Register & Download
+							<ArrowRight size={18} />
+						</a>
+						<a
+							href="https://github.com/Arthium-Org/stock-plan-companion"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="btn-secondary"
+						>
+							<Code2 size={18} />
+							View on GitHub
+						</a>
 					</div>
 
 					<!-- Screenshot below CTA -->
-					<div class="mt-12 animate-slide-up">
-						<div class="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+					<div class="mt-14 animate-slide-up">
+						<div
+							class="card overflow-hidden"
+							style="box-shadow: 0 40px 90px -40px var(--accent-glow), 0 20px 50px -30px rgba(0,0,0,0.4);"
+						>
 							<BlurredScreenshot
 								src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
 								alt="Stock Plan Companion App - Portfolio View"
@@ -275,34 +339,43 @@
 			</div>
 
 			<!-- Main content (left column, row 2 on desktop) -->
-			<div class="min-w-0 space-y-16 content-area lg:col-span-2 lg:col-start-1 lg:row-start-2">
+			<div class="min-w-0 space-y-24 lg:col-span-2 lg:col-start-1 lg:row-start-2">
 				<!-- Features Section -->
-				<section class="relative z-0">
-					<div class="mb-12 text-center sm:mb-16">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">How It Works</h2>
-						<p class="text-gray-600">Everything you need for Schedule FA compliance and tax reporting</p>
+				<section>
+					<div class="mb-12 text-center">
+						<p class="mb-3 text-sm font-semibold uppercase tracking-widest t-accent">How it works</p>
+						<h2 class="text-3xl font-bold tracking-tight t-strong sm:text-4xl">
+							Built for Schedule FA compliance
+						</h2>
+						<p class="mt-3 t-muted">Everything you need for tax reporting, on your own machine</p>
 					</div>
 
-					<div class="grid gap-8 sm:grid-cols-2 auto-rows-max">
-						{#each features as feature, i}
+					<div class="grid gap-5 sm:grid-cols-2">
+						{#each features as feature}
 							<div
-								class="rounded-lg border-2 bg-white p-6 transition {feature.highlight
-									? 'border-red-500 shadow-lg ring-2 ring-red-100 sm:col-span-2'
-									: 'border-gray-200 hover:border-blue-200 hover:shadow-md'}"
-								style="z-index: {feature.highlight ? 0 : 1};"
+								class="card card-hover p-6 {feature.highlight ? 'sm:col-span-2' : ''}"
+								style={feature.highlight
+									? 'border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 24px 60px -30px var(--accent-glow);'
+									: ''}
 							>
 								<div class="flex items-start gap-4">
-									<div class="flex-shrink-0 text-blue-600">
-										<svelte:component this={feature.icon} size={32} />
+									<div
+										class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl"
+										style="background: var(--chip-bg); color: var(--accent-fg);"
+									>
+										<svelte:component this={feature.icon} size={22} />
 									</div>
 									<div class="flex-1">
 										{#if feature.highlight}
-											<div class="mb-2 inline-flex rounded-full bg-red-100 px-3 py-1">
-												<span class="text-xs font-bold text-red-700">PRIMARY FEATURE</span>
+											<div
+												class="mb-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide"
+												style="background: var(--chip-bg); color: var(--accent-fg);"
+											>
+												Primary feature
 											</div>
 										{/if}
-										<h3 class="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
-										<p class="text-sm text-gray-600">{feature.description}</p>
+										<h3 class="mb-1.5 text-lg font-semibold t-strong">{feature.title}</h3>
+										<p class="text-sm t-muted">{feature.description}</p>
 									</div>
 								</div>
 							</div>
@@ -312,12 +385,13 @@
 
 				<!-- Interactive Screenshots Viewer -->
 				<section>
-					<div class="mb-12 text-center sm:mb-16">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Explore the App</h2>
-						<p class="text-gray-600">Click through the key features and interface</p>
+					<div class="mb-12 text-center">
+						<p class="mb-3 text-sm font-semibold uppercase tracking-widest t-accent">Product tour</p>
+						<h2 class="text-3xl font-bold tracking-tight t-strong sm:text-4xl">Explore the app</h2>
+						<p class="mt-3 t-muted">Click through the key features and interface</p>
 					</div>
 
-					<div class="rounded-xl border border-gray-200 shadow-xl overflow-hidden bg-gray-900">
+					<div class="card overflow-hidden" style="background: #0b0b10;">
 						<BlurredScreenshot
 							src={screenshots[activeScreenshot].src}
 							alt={screenshots[activeScreenshot].title}
@@ -325,45 +399,47 @@
 						/>
 
 						<!-- Navigation Overlay -->
-						<div class="flex items-center justify-between p-4 gap-3">
+						<div class="flex items-center justify-between gap-3 p-4">
 							<button
 								on:click={prevScreenshot}
-								class="bg-white hover:bg-gray-100 rounded-lg p-3 shadow-lg transition flex-1 sm:flex-none"
+								class="flex-1 rounded-lg px-3 py-2.5 text-sm font-medium text-white/90 transition hover:bg-white/10 sm:flex-none"
+								style="background: rgba(255,255,255,0.08);"
 							>
 								← Previous
 							</button>
-							<div class="text-white text-sm bg-black/50 rounded-lg px-3 py-2">
-								{activeScreenshot + 1} of {screenshots.length}
+							<div class="rounded-lg bg-black/50 px-3 py-2 text-sm text-white/80">
+								{activeScreenshot + 1} / {screenshots.length}
 							</div>
 							<button
 								on:click={nextScreenshot}
-								class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-3 shadow-lg transition flex-1 sm:flex-none"
+								class="flex-1 rounded-lg px-3 py-2.5 text-sm font-semibold transition sm:flex-none"
+								style="background: var(--accent); color: var(--on-accent);"
 							>
 								Next →
 							</button>
 						</div>
 
 						<!-- Thumbnail Gallery -->
-						<div class="flex gap-2 overflow-x-auto p-4">
+						<div class="flex gap-2 overflow-x-auto px-4 pb-4">
 							{#each screenshots as screenshot, i}
 								<button
 									on:click={() => (activeScreenshot = i)}
-									class="flex-shrink-0 rounded-lg border-2 overflow-hidden transition {i ===
-									activeScreenshot
-										? 'border-blue-600 shadow-md'
-										: 'border-gray-600 hover:border-gray-500'}"
+									class="flex-shrink-0 overflow-hidden rounded-lg border-2 transition"
+									style={i === activeScreenshot
+										? 'border-color: var(--accent);'
+										: 'border-color: rgba(255,255,255,0.12);'}
 								>
-									<div class="w-20 h-28 overflow-hidden relative">
+									<div class="relative h-28 w-20 overflow-hidden">
 										<img
 											src={screenshot.src}
 											alt={screenshot.title}
-											class="w-full h-full object-cover"
+											class="h-full w-full object-cover"
 										/>
-										{#each (screenshot.blurRegions || []) as region}
+										{#each screenshot.blurRegions || [] as region}
 											<div
 												class="absolute"
 												style="top: {region.top}; left: {region.left}; width: {region.width}; height: {region.height}; backdrop-filter: blur(6px); border-radius: 0.25rem;"
-											/>
+											></div>
 										{/each}
 									</div>
 								</button>
@@ -372,11 +448,11 @@
 					</div>
 
 					<!-- Info Panel -->
-					<div class="mt-6 rounded-lg border border-gray-200 bg-white p-6">
-						<h3 class="text-xl font-bold text-gray-900 mb-3">
+					<div class="card mt-5 p-6">
+						<h3 class="mb-2 text-xl font-bold t-strong">
 							{screenshots[activeScreenshot].title}
 						</h3>
-						<p class="text-gray-600 leading-relaxed">
+						<p class="leading-relaxed t-muted">
 							{screenshots[activeScreenshot].description}
 						</p>
 					</div>
@@ -384,53 +460,40 @@
 
 				<!-- Status Section -->
 				<section>
-					<div class="mb-12 text-center sm:mb-16">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Current Status</h2>
-						<p class="text-gray-600">What's available today and what's coming next</p>
+					<div class="mb-12 text-center">
+						<p class="mb-3 text-sm font-semibold uppercase tracking-widest t-accent">Roadmap</p>
+						<h2 class="text-3xl font-bold tracking-tight t-strong sm:text-4xl">Current status</h2>
+						<p class="mt-3 t-muted">What's available today and what's coming next</p>
 					</div>
 
-					<div class="grid gap-8">
-						<div class="rounded-lg border border-green-200 bg-green-50 p-8">
-							<h3 class="mb-6 text-xl font-semibold text-gray-900">Available Today</h3>
-							<ul class="space-y-3">
-								<li class="flex items-start gap-3">
-									<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
-									<span class="text-gray-700">E*TRADE support</span>
-								</li>
-								<li class="flex items-start gap-3">
-									<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
-									<span class="text-gray-700">RSU & ESPP record management</span>
-								</li>
-								<li class="flex items-start gap-3">
-									<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
-									<span class="text-gray-700">Desktop application</span>
-								</li>
-								<li class="flex items-start gap-3">
-									<CheckCircle size={20} class="mt-1 text-green-600 flex-shrink-0" />
-									<span class="text-gray-700">Open source</span>
-								</li>
+					<div class="grid gap-5">
+						<div
+							class="card p-8"
+							style="border-color: color-mix(in srgb, var(--success) 40%, var(--border));"
+						>
+							<h3 class="mb-6 flex items-center gap-2 text-lg font-semibold t-strong">
+								<span class="h-2 w-2 rounded-full" style="background: var(--success);"></span>
+								Available today
+							</h3>
+							<ul class="grid gap-3 sm:grid-cols-2">
+								{#each ['E*TRADE support', 'RSU & ESPP record management', 'Desktop application', 'Open source'] as item}
+									<li class="flex items-start gap-3">
+										<CheckCircle size={18} class="mt-0.5 flex-shrink-0" style="color: var(--success)" />
+										<span class="t-muted">{item}</span>
+									</li>
+								{/each}
 							</ul>
 						</div>
 
-						<div class="rounded-lg border border-gray-200 bg-gray-50 p-8">
-							<h3 class="mb-6 text-xl font-semibold text-gray-900">Coming Soon</h3>
-							<ul class="space-y-3">
-								<li class="flex items-start gap-3">
-									<span class="text-gray-400">→</span>
-									<span class="text-gray-700">Additional broker support</span>
-								</li>
-								<li class="flex items-start gap-3">
-									<span class="text-gray-400">→</span>
-									<span class="text-gray-700">Dividend income support</span>
-								</li>
-								<li class="flex items-start gap-3">
-									<span class="text-gray-400">→</span>
-									<span class="text-gray-700">Better Schedule FA assistance</span>
-								</li>
-								<li class="flex items-start gap-3">
-									<span class="text-gray-400">→</span>
-									<span class="text-gray-700">More tax reports</span>
-								</li>
+						<div class="card-2 p-8">
+							<h3 class="mb-6 text-lg font-semibold t-strong">Coming soon</h3>
+							<ul class="grid gap-3 sm:grid-cols-2">
+								{#each ['Additional broker support', 'Dividend income support', 'Better Schedule FA assistance', 'More tax reports'] as item}
+									<li class="flex items-start gap-3">
+										<span class="t-accent">→</span>
+										<span class="t-muted">{item}</span>
+									</li>
+								{/each}
 							</ul>
 						</div>
 					</div>
@@ -438,91 +501,51 @@
 
 				<!-- Getting Started Section -->
 				<section>
-					<div class="mb-12 text-center sm:mb-16">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Getting Started in 3 Steps</h2>
-						<p class="text-gray-600">Download from E*TRADE and upload to Stock Plan Companion</p>
+					<div class="mb-12 text-center">
+						<p class="mb-3 text-sm font-semibold uppercase tracking-widest t-accent">Setup</p>
+						<h2 class="text-3xl font-bold tracking-tight t-strong sm:text-4xl">
+							Getting started in 3 steps
+						</h2>
+						<p class="mt-3 t-muted">Download from E*TRADE and upload to Stock Plan Companion</p>
 					</div>
 
-					<div class="grid gap-8 md:grid-cols-3">
-						<!-- Step 1 -->
-						<div class="flex flex-col">
-							<div
-								class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white"
-							>
-								1
+					<div class="grid gap-5 md:grid-cols-3">
+						{#each [{ n: '1', t: 'Download Holdings', d: 'Log into E*TRADE Stock Plan → Holdings tab → Download → Download Expanded. Save the .xlsx file.', c: 'Current portfolio snapshot' }, { n: '2', t: 'Download Benefit History', d: 'Go to My Account → Benefit History. Click Download → Download Expanded. Save the .xlsx file.', c: 'Grants, vests, and sales history' }, { n: '3', t: 'Download Gains & Losses', d: 'My Account → Gains & Losses. Select tax year, click Apply, then Download → Download Expanded.', c: 'Capital gains tax data' }] as step}
+							<div class="card flex flex-col p-6">
+								<div
+									class="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl text-lg font-bold"
+									style="background-image: linear-gradient(135deg, var(--accent), var(--accent-2)); color: var(--on-accent); box-shadow: 0 8px 24px -8px var(--accent-glow);"
+								>
+									{step.n}
+								</div>
+								<h3 class="mb-2 text-lg font-semibold t-strong">{step.t}</h3>
+								<p class="mb-4 text-sm leading-relaxed t-muted">{step.d}</p>
+								<div class="card-2 mt-auto p-3">
+									<p class="text-xs font-medium t-faint">{step.c}</p>
+								</div>
 							</div>
-							<h3 class="mb-3 text-xl font-semibold text-gray-900">Download Holdings</h3>
-							<p class="mb-4 text-gray-600 text-sm leading-relaxed">
-								Log into E*TRADE Stock Plan → Holdings tab → Download → Download Expanded. Save the .xlsx
-								file.
-							</p>
-							<div class="mt-auto rounded-lg bg-gray-50 p-3 border border-gray-200">
-								<p class="text-xs text-gray-600 font-medium">Current portfolio snapshot</p>
-							</div>
-						</div>
-
-						<!-- Step 2 -->
-						<div class="flex flex-col">
-							<div
-								class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white"
-							>
-								2
-							</div>
-							<h3 class="mb-3 text-xl font-semibold text-gray-900">Download Benefit History</h3>
-							<p class="mb-4 text-gray-600 text-sm leading-relaxed">
-								Go to My Account → Benefit History. Click Download → Download Expanded. Save the .xlsx file.
-							</p>
-							<div class="mt-auto rounded-lg bg-gray-50 p-3 border border-gray-200">
-								<p class="text-xs text-gray-600 font-medium">Grants, vests, and sales history</p>
-							</div>
-						</div>
-
-						<!-- Step 3 -->
-						<div class="flex flex-col">
-							<div
-								class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white"
-							>
-								3
-							</div>
-							<h3 class="mb-3 text-xl font-semibold text-gray-900">Download Gains & Losses</h3>
-							<p class="mb-4 text-gray-600 text-sm leading-relaxed">
-								My Account → Gains & Losses. Select tax year, click Apply, then Download → Download
-								Expanded.
-							</p>
-							<div class="mt-auto rounded-lg bg-gray-50 p-3 border border-gray-200">
-								<p class="text-xs text-gray-600 font-medium">Capital gains tax data</p>
-							</div>
-						</div>
+						{/each}
 					</div>
 
 					<!-- Upload Section -->
-					<div class="mt-12 rounded-xl border border-gray-200 bg-white overflow-hidden shadow-lg">
+					<div class="card mt-8 overflow-hidden">
 						<div class="grid gap-0 lg:grid-cols-2">
-							<!-- Left: Info -->
-							<div class="p-8 flex flex-col justify-center">
-								<h3 class="mb-3 text-2xl font-bold text-gray-900">Upload to Stock Plan Companion</h3>
-								<p class="mb-6 text-gray-600">
-									Open the app and drag & drop your downloaded E*TRADE files. The app validates and
-									organizes everything automatically.
+							<div class="flex flex-col justify-center p-8">
+								<h3 class="mb-3 text-2xl font-bold t-strong">Upload to Stock Plan Companion</h3>
+								<p class="mb-6 t-muted">
+									Open the app and drag & drop your downloaded E*TRADE files. It validates and organizes
+									everything automatically.
 								</p>
-								<ul class="space-y-3 text-sm text-gray-700">
-									<li class="flex items-start gap-3">
-										<span class="text-blue-600 font-bold">✓</span>
-										<span>Files are validated and parsed in order</span>
-									</li>
-									<li class="flex items-start gap-3">
-										<span class="text-blue-600 font-bold">✓</span>
-										<span>Data stays private on your computer</span>
-									</li>
-									<li class="flex items-start gap-3">
-										<span class="text-blue-600 font-bold">✓</span>
-										<span>Instant access to tax reports and analysis</span>
-									</li>
+								<ul class="space-y-3 text-sm">
+									{#each ['Files are validated and parsed in order', 'Data stays private on your computer', 'Instant access to tax reports and analysis'] as point}
+										<li class="flex items-start gap-3">
+											<CheckCircle size={18} class="mt-0.5 flex-shrink-0" style="color: var(--accent-fg)" />
+											<span class="t-muted">{point}</span>
+										</li>
+									{/each}
 								</ul>
 							</div>
-
-							<!-- Right: Screenshot -->
-							<div class="bg-gray-50 p-8 flex items-center justify-center">
+							<div class="flex items-center justify-center p-8" style="background: var(--surface-2);">
 								<BlurredScreenshot
 									src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F4020280870af4ce3bb40ef90ac8dcbfd?format=webp&width=800&height=1200"
 									alt="Upload Files Interface"
@@ -535,17 +558,22 @@
 
 				<!-- Why Section -->
 				<section>
-					<div class="rounded-xl border border-gray-200 bg-blue-50 px-8 py-12 sm:px-12">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Why This Project?</h2>
-						<p class="max-w-3xl text-lg text-gray-700">
-							Managing RSUs and ESPPs for Indian tax reporting can be time-consuming and complex. This
-							project aims to simplify record keeping and organization. We handle the paperwork so you can
+					<div
+						class="card px-8 py-12 sm:px-12"
+						style="background-image: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%);"
+					>
+						<h2 class="mb-4 text-3xl font-bold tracking-tight t-strong sm:text-4xl">
+							Why this project?
+						</h2>
+						<p class="max-w-3xl text-lg t-muted">
+							Managing RSUs and ESPPs for Indian tax reporting is time-consuming and complex. This
+							project simplifies record keeping and organization — we handle the paperwork so you can
 							focus on what matters.
 						</p>
-						<p class="mt-4 text-sm text-gray-600">
-							<strong>Note:</strong> This is not tax filing software and is not affiliated with E*TRADE or the
-							Income Tax Department. Always consult with a qualified tax professional for your specific tax
-							situation.
+						<p class="mt-4 text-sm t-faint">
+							<strong class="t-muted">Note:</strong> This is not tax filing software and is not affiliated
+							with E*TRADE or the Income Tax Department. Always consult a qualified tax professional for your
+							specific situation.
 						</p>
 					</div>
 				</section>
@@ -553,56 +581,48 @@
 				<!-- Registration Section -->
 				<section id="register">
 					<div class="mx-auto max-w-2xl text-center">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Get Started Today</h2>
-						<p class="mb-8 text-gray-600">Register to download the latest version</p>
+						<p class="mb-3 text-sm font-semibold uppercase tracking-widest t-accent">Download</p>
+						<h2 class="mb-3 text-3xl font-bold tracking-tight t-strong sm:text-4xl">
+							Get started today
+						</h2>
+						<p class="mb-8 t-muted">Register to download the latest version</p>
 
 						{#if !formSubmitted}
-							<form on:submit|preventDefault={handleFormSubmit} class="space-y-4">
-								<input
-									type="text"
-									name="name"
-									placeholder="Your name (optional)"
-									class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-								/>
-								<input
-									type="email"
-									name="email"
-									placeholder="Your email"
-									required
-									class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-								/>
+							<form on:submit|preventDefault={handleFormSubmit} class="space-y-4 text-left">
+								<input type="text" name="name" placeholder="Your name (optional)" class="input" />
+								<input type="email" name="email" placeholder="Your email" required class="input" />
 
-								<label class="flex items-start gap-2 text-left text-sm text-gray-600">
+								<label class="flex items-start gap-2 text-sm t-muted">
 									<input
 										type="checkbox"
 										name="consent"
 										checked
 										required
-										class="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+										class="mt-0.5 h-4 w-4 rounded"
+										style="accent-color: var(--accent);"
 									/>
 									<span>Email me about new releases and updates.</span>
 								</label>
 
 								{#if formError}
-									<p class="text-sm text-red-600">{formError}</p>
+									<p class="text-sm" style="color: var(--danger-fg)">{formError}</p>
 								{/if}
 
-								<button
-									type="submit"
-									disabled={formLoading}
-									class="btn-primary w-full disabled:opacity-50"
-								>
+								<button type="submit" disabled={formLoading} class="btn-primary w-full disabled:opacity-50">
 									{formLoading ? 'Registering...' : 'Register & Download'}
 								</button>
 							</form>
 						{:else}
-							<div class="rounded-lg border border-green-200 bg-green-50 p-8">
+							<div
+								class="card p-8"
+								style="border-color: color-mix(in srgb, var(--success) 40%, var(--border));"
+							>
 								<div class="mb-6 text-center">
 									<div class="mb-2 flex justify-center">
-										<CheckCircle size={40} class="text-green-600" />
+										<CheckCircle size={40} style="color: var(--success)" />
 									</div>
-									<h3 class="mb-2 text-xl font-semibold text-gray-900">Registration Successful!</h3>
-									<p class="text-gray-600">Download your copy for your platform:</p>
+									<h3 class="mb-2 text-xl font-semibold t-strong">Registration successful!</h3>
+									<p class="t-muted">Download your copy for your platform:</p>
 								</div>
 
 								<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -628,7 +648,7 @@
 
 								<button
 									on:click={() => (formSubmitted = false)}
-									class="mt-6 text-sm text-blue-600 hover:text-blue-700"
+									class="mt-6 text-sm font-medium t-accent"
 								>
 									Register another email
 								</button>
@@ -640,8 +660,8 @@
 				<!-- Open Source Section -->
 				<section>
 					<div class="text-center">
-						<h2 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Open Source</h2>
-						<p class="mb-8 text-lg text-gray-600">
+						<h2 class="mb-4 text-3xl font-bold tracking-tight t-strong sm:text-4xl">Open source</h2>
+						<p class="mx-auto mb-8 max-w-lg text-lg t-muted">
 							Stock Plan Companion is hosted on GitHub. Community contributions are welcome!
 						</p>
 						<a
@@ -650,23 +670,26 @@
 							rel="noopener noreferrer"
 							class="btn-primary"
 						>
+							<Code2 size={18} />
 							Visit GitHub
 						</a>
 					</div>
 				</section>
 			</div>
-
 		</div>
 	</div>
 
 	{#snippet complianceCards()}
 		<!-- In the News -->
-		<div class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-			<div class="mb-3 inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1">
-				<span class="text-xs font-semibold uppercase tracking-wide text-blue-700">In the News</span>
+		<div class="card mb-6 p-5">
+			<div
+				class="mb-3 inline-flex items-center rounded-full px-2.5 py-1"
+				style="background: var(--chip-bg);"
+			>
+				<span class="text-xs font-semibold uppercase tracking-wide t-accent">In the News</span>
 			</div>
-			<h3 class="mb-2 text-base font-semibold text-gray-900">IT crackdown on foreign assets</h3>
-			<p class="mb-4 text-sm leading-relaxed text-gray-600">
+			<h3 class="mb-2 text-base font-semibold t-strong">IT crackdown on foreign assets</h3>
+			<p class="mb-4 text-sm leading-relaxed t-muted">
 				The Hindu reports the IT Department is notifying taxpayers with non-disclosed foreign assets
 				to file revised ITRs.
 			</p>
@@ -674,7 +697,7 @@
 				href="https://www.thehindu.com/business/Economy/income-tax-department-identifies-cases-of-non-disclosure-of-foreign-assets-in-itrs/article70329849.ece"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
+				class="inline-flex items-center gap-1.5 text-sm font-medium t-accent"
 			>
 				Read article
 				<ExternalLink size={14} />
@@ -682,23 +705,29 @@
 		</div>
 
 		<!-- IT Department alert -->
-		<div class="mb-6 rounded-xl border border-red-200 bg-white p-5 shadow-sm ring-1 ring-red-100">
+		<div class="card mb-6 p-5" style="border-color: var(--danger-border);">
 			<div class="mb-3 flex items-center gap-2">
-				<AlertTriangle size={20} class="flex-shrink-0 text-red-600" />
-				<h3 class="text-base font-bold text-gray-900">Schedule FA is mandatory</h3>
+				<AlertTriangle size={20} class="flex-shrink-0" style="color: var(--danger-fg)" />
+				<h3 class="text-base font-bold t-strong">Schedule FA is mandatory</h3>
 			</div>
-			<p class="mb-3 text-sm leading-relaxed text-gray-600">
-				<span class="font-semibold text-gray-900">Nov 2025:</span> the IT Department is actively
-				identifying non-disclosure of foreign assets.
+			<p class="mb-3 text-sm leading-relaxed t-muted">
+				<span class="font-semibold t-strong">Nov 2025:</span> the IT Department is actively identifying
+				non-disclosure of foreign assets.
 			</p>
-			<p class="mb-2 text-sm font-semibold text-gray-900">You must file it if you:</p>
-			<ul class="mb-3 space-y-1.5 text-sm text-gray-600">
-				<li class="flex gap-2"><span class="text-red-500">•</span> Hold RSUs/ESPPs from US companies</li>
-				<li class="flex gap-2"><span class="text-red-500">•</span> Have foreign bank accounts</li>
-				<li class="flex gap-2"><span class="text-red-500">•</span> Receive foreign income</li>
+			<p class="mb-2 text-sm font-semibold t-strong">You must file it if you:</p>
+			<ul class="mb-3 space-y-1.5 text-sm t-muted">
+				<li class="flex gap-2">
+					<span style="color: var(--danger-fg)">•</span> Hold RSUs/ESPPs from US companies
+				</li>
+				<li class="flex gap-2">
+					<span style="color: var(--danger-fg)">•</span> Have foreign bank accounts
+				</li>
+				<li class="flex gap-2">
+					<span style="color: var(--danger-fg)">•</span> Receive foreign income
+				</li>
 			</ul>
-			<div class="mb-4 rounded-lg bg-red-50 px-3 py-2">
-				<p class="text-xs font-semibold text-red-700">
+			<div class="mb-4 rounded-lg px-3 py-2" style="background: var(--danger-bg);">
+				<p class="text-xs font-semibold" style="color: var(--danger-fg)">
 					Penalty for non-disclosure: up to 50% + prosecution
 				</p>
 			</div>
@@ -707,7 +736,8 @@
 					href="https://www.incometax.gov.in/iec/foportal/nudge/nudge-schedule-fa#video"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+					class="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition"
+					style="background: var(--accent); color: var(--on-accent);"
 				>
 					<ExternalLink size={14} />
 					IT Dept guidance
@@ -716,7 +746,8 @@
 					href="https://economictimes.indiatimes.com/wealth/tax/foreign-income-in-itr-avoid-these-7-disclosure-mistakes-that-can-cost-you-dearly/foreign-tax-credit-why-form-67-and-dtaa-are-important/slideshow/132106260.cms"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+					class="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition"
+					style="border: 1px solid var(--border-strong); color: var(--text);"
 				>
 					<ExternalLink size={14} />
 					Avoid common mistakes
@@ -725,77 +756,70 @@
 		</div>
 
 		<!-- The Challenge -->
-		<div class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+		<div class="card mb-6 p-5">
 			<div class="mb-3 flex items-center gap-2">
-				<FileText size={20} class="flex-shrink-0 text-gray-500" />
-				<h3 class="text-base font-semibold text-gray-900">The challenge</h3>
+				<FileText size={20} class="flex-shrink-0 t-faint" />
+				<h3 class="text-base font-semibold t-strong">The challenge</h3>
 			</div>
-			<p class="mb-3 text-sm leading-relaxed text-gray-600">
-				Schedule FA requires detailed data for each asset — acquisition date, cost, fair market
-				value, and exchange rates.
+			<p class="mb-3 text-sm leading-relaxed t-muted">
+				Schedule FA requires detailed data for each asset — acquisition date, cost, fair market value,
+				and exchange rates.
 			</p>
-			<p class="text-sm font-medium text-gray-900">
+			<p class="text-sm font-medium t-strong">
 				Compiling this by hand across multiple years is error-prone and time-consuming.
 			</p>
 		</div>
 
 		<!-- The Solution -->
-		<div class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+		<div class="card mb-6 p-5">
 			<div class="mb-3 flex items-center gap-2">
-				<CheckCircle size={20} class="flex-shrink-0 text-green-600" />
-				<h3 class="text-base font-semibold text-gray-900">The solution</h3>
+				<CheckCircle size={20} class="flex-shrink-0" style="color: var(--success)" />
+				<h3 class="text-base font-semibold t-strong">The solution</h3>
 			</div>
 			<div class="mb-2 flex items-center gap-2">
-				<Download size={16} class="flex-shrink-0 text-blue-600" />
-				<p class="text-sm font-semibold text-gray-900">One-click CSV export</p>
+				<Download size={16} class="flex-shrink-0" style="color: var(--accent-fg)" />
+				<p class="text-sm font-semibold t-strong">One-click CSV export</p>
 			</div>
-			<p class="text-sm leading-relaxed text-gray-600">
+			<p class="text-sm leading-relaxed t-muted">
 				Every Schedule FA field auto-populated from your E*TRADE data.
 			</p>
 		</div>
 	{/snippet}
 
 	<!-- Footer -->
-	<footer class="border-t border-gray-100 bg-gray-50">
+	<footer style="border-top: 1px solid var(--border); background: var(--surface-2);">
 		<div class="section-container mx-auto max-w-7xl py-12 sm:py-16">
 			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 				<div>
-					<h4 class="mb-4 font-semibold text-gray-900">Product</h4>
+					<h4 class="mb-4 font-semibold t-strong">Product</h4>
 					<ul class="space-y-2">
 						<li>
-							<a href="https://github.com/Arthium-Org/stock-plan-companion" class="text-sm text-gray-600 hover:text-gray-900">
-								GitHub
-							</a>
+							<a
+								href="https://github.com/Arthium-Org/stock-plan-companion"
+								class="text-sm t-muted transition hover:t-accent">GitHub</a
+							>
 						</li>
 					</ul>
 				</div>
 				<div>
-					<h4 class="mb-4 font-semibold text-gray-900">Support</h4>
+					<h4 class="mb-4 font-semibold t-strong">Support</h4>
 					<ul class="space-y-2">
 						<li>
-							<a href="mailto:kvakatidev@gmail.com" class="text-sm text-gray-600 hover:text-gray-900">
-								Contact
-							</a>
+							<a href="mailto:kvakatidev@gmail.com" class="text-sm t-muted transition hover:t-accent"
+								>Contact</a
+							>
 						</li>
 					</ul>
 				</div>
 				<div>
-					<h4 class="mb-4 font-semibold text-gray-900">Legal Notice</h4>
-					<p class="text-xs text-gray-600">
-						Not affiliated with E*TRADE or the Income Tax Department.
-					</p>
+					<h4 class="mb-4 font-semibold t-strong">Legal Notice</h4>
+					<p class="text-xs t-faint">Not affiliated with E*TRADE or the Income Tax Department.</p>
 				</div>
 			</div>
 
-			<div class="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
+			<div class="mt-8 pt-8 text-center text-sm t-faint" style="border-top: 1px solid var(--border);">
 				<p>&copy; 2026 Stock Plan Companion. Open source under MIT License.</p>
 			</div>
 		</div>
 	</footer>
 </div>
-
-<style>
-	:global(html) {
-		scroll-behavior: smooth;
-	}
-</style>
