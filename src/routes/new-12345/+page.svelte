@@ -100,52 +100,43 @@
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200',
 			title: 'Portfolio View',
 			description: 'Complete overview of your RSU and ESPP holdings with real-time values and gains/losses',
-			blurRegions: [
-				{ top: '1%', left: '8%', width: '35%', height: '8%' },
-				{ top: '3%', left: '60%', width: '35%', height: '6%' }
-			]
+			blurRegions: [{ top: '22%', left: '8%', width: '84%', height: '15%' }]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F22c302b46d874b8b8722f63024cf092b?format=webp&width=800&height=1200',
 			title: 'Tax Centre - Capital Gains',
 			description: 'Track capital gains and losses for tax reporting organized by financial year',
-			blurRegions: [
-				{ top: '1%', left: '8%', width: '35%', height: '8%' },
-				{ top: '15%', left: '15%', width: '25%', height: '6%' },
-				{ top: '25%', left: '60%', width: '25%', height: '50%' }
-			]
+			blurRegions: [{ top: '39%', left: '8%', width: '84%', height: '15%' }]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff87c7017d6284956a8ce80d9ceb893c6?format=webp&width=800&height=1200',
 			title: 'Tax Centre - Schedule FA',
 			description: 'Detailed Schedule FA data for Indian tax reporting with all required fields',
-			blurRegions: [
-				{ top: '1%', left: '8%', width: '35%', height: '8%' },
-				{ top: '20%', left: '10%', width: '80%', height: '60%' }
-			]
+			blurRegions: []
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Ff71eef4282dc4009b81e051cd742e999?format=webp&width=800&height=1200',
 			title: 'Tax Filing Assistant',
 			description: 'Step-by-step guidance for preparing Schedule FA with country and income details',
-			blurRegions: [
-				{ top: '1%', left: '8%', width: '35%', height: '8%' },
-				{ top: '18%', left: '10%', width: '80%', height: '50%' }
-			]
+			blurRegions: []
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F7e71c1411bd64f07ab68e317b7ab0db9?format=webp&width=800&height=1200',
 			title: 'Sell Advisor',
 			description: 'Smart recommendations for optimizing tax outcomes when selling your shares',
-			blurRegions: [{ top: '1%', left: '8%', width: '35%', height: '8%' }]
+			blurRegions: [
+				{ top: '31%', left: '13%', width: '34%', height: '4%' },
+				{ top: '37%', left: '25%', width: '30%', height: '4%' },
+				{ top: '49%', left: '13%', width: '58%', height: '8%' }
+			]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12babee9cf6043bfb764f9e9ec54bd50?format=webp&width=800&height=1200',
 			title: 'Benefits History',
 			description: 'Complete history of RSU grants, vesting schedules, and ESPP purchases',
 			blurRegions: [
-				{ top: '1%', left: '8%', width: '35%', height: '8%' },
-				{ top: '25%', left: '10%', width: '80%', height: '50%' }
+				{ top: '28%', left: '8%', width: '84%', height: '11%' },
+				{ top: '56%', left: '7%', width: '11%', height: '38%' }
 			]
 		}
 	];
@@ -326,11 +317,7 @@
 							<BlurredScreenshot
 								src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2Fea68c3bfb0fa400496e94fad9af4c73b?format=webp&width=800&height=1200"
 								alt="Stock Plan Companion App - Portfolio View"
-								blurRegions={[
-									{ top: '1%', left: '8%', width: '35%', height: '8%' },
-									{ top: '3%', left: '60%', width: '35%', height: '6%' },
-									{ top: '8%', left: '8%', width: '40%', height: '5%' }
-								]}
+								blurRegions={[{ top: '22%', left: '8%', width: '84%', height: '15%' }]}
 							/>
 						</div>
 					</div>
@@ -559,10 +546,7 @@
 								<BlurredScreenshot
 									src="https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F4020280870af4ce3bb40ef90ac8dcbfd?format=webp&width=800&height=1200"
 									alt="Upload Files Interface"
-									blurRegions={[
-										{ top: '8%', left: '10%', width: '80%', height: '12%' },
-										{ top: '25%', left: '10%', width: '80%', height: '50%' }
-									]}
+									blurRegions={[]}
 								/>
 							</div>
 						</div>
