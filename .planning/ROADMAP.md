@@ -26,7 +26,8 @@ This milestone takes the existing, already-built arthium.org marketing site from
   2. That DMG download resolves to an asset published in a GitHub Release of `Arthium-Org/stock-plan-companion-app` — not the old repo, not a stale hardcoded tag.
   3. The Windows download appears as a "coming soon" state that doesn't 404 or dead-link anywhere.
   4. Shipping a new release (new tag/filename) requires editing exactly one config location — no changes to page/form logic.
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 01-01-PLAN.md — Config-driven download module + wired macOS/Windows buttons (test → implement → visual verify)
 **UI hint**: yes
 
 ### Phase 2: Registration Backend Migration
@@ -62,6 +63,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|-----------------|--------|-----------|
-| 1. Download Wiring & Release Config | 0/TBD | Not started | - |
+| 1. Download Wiring & Release Config | 0/1 | Not started | - |
 | 2. Registration Backend Migration | 0/TBD | Not started | - |
 | 3. Links, Contact & CTA Cleanup | 0/TBD | Not started | - |
