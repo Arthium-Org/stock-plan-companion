@@ -389,17 +389,19 @@ See Pattern 2 above under Architecture Patterns — same code, reproduced there 
 
 **Confirm A1 and A2 with a real end-to-end test (deploy the script, submit the form, inspect Network tab) before/during execution** — this is the single most execution-risk-bearing unknown in the phase.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Does `fetch()`'s default `redirect: 'follow'` actually complete the full round trip (POST to `/exec` → 302 → GET to `script.googleusercontent.com/macros/echo`) without the browser re-checking CORS in a way that blocks it, for a real deployed Apps Script (not just what blog posts report)?**
+1. **[RESOLVED by Plan 02-02, Task 2]** **Does `fetch()`'s default `redirect: 'follow'` actually complete the full round trip (POST to `/exec` → 302 → GET to `script.googleusercontent.com/macros/echo`) without the browser re-checking CORS in a way that blocks it, for a real deployed Apps Script (not just what blog posts report)?**
    - What we know: Multiple independent (non-official) sources describe this exact flow working when the original request is a CORS simple request; this is the standard, widely-used pattern for calling Apps Script Web Apps from client-side JS (used by numerous public tutorials/libraries).
    - What's unclear: No official Google documentation was found this session explicitly confirming the redirect-target's CORS behavior (vs. community reverse-engineering).
    - Recommendation: Treat as MEDIUM confidence (see Assumptions Log A2). The plan should include an explicit manual verification step — deploy the real script, submit the real form in a browser, and confirm `response.ok` and a readable JSON body appear in the Network tab — before marking REG-04 done. This is inherently a runtime/environment check, not something research can fully close out.
+   - Resolution: Addressed by **Plan 02-02, Task 2**, which performs a live end-to-end verification (submit the real form against the deployed `/exec` URL and inspect the Network tab for a readable `{ok:true}` response body).
 
-2. **Exact Apps Script project provisioning steps (D-10) are a one-time manual action outside this repo — should the plan capture them as a runbook/README, or as literal step-by-step task instructions for whoever executes the phase?**
+2. **[RESOLVED — endpoint already deployed]** **Exact Apps Script project provisioning steps (D-10) are a one-time manual action outside this repo — should the plan capture them as a runbook/README, or as literal step-by-step task instructions for whoever executes the phase?**
    - What we know: D-10 already lists the four steps (create Sheet, add doPost, deploy as Web App with "Anyone" access, drop URL into config).
    - What's unclear: Whether the planner should treat "create the Apps Script project" as a task with a `checkpoint:human-verify` gate (since it requires a Google account and manual web-UI steps that cannot be scripted/automated from this repo) or whether it's assumed to already exist by the time code-editing tasks run.
    - Recommendation: Plan should include a `checkpoint:human-verify` (or equivalent manual step) for the Apps Script deployment itself, since it cannot be automated via CLI from this codebase — then proceed to the code-editing tasks once a real deployment URL exists to test against.
+   - Resolution: The Apps Script Web App is **already deployed and tested** (a live `/exec` URL exists — see project memory), so no creation/provisioning checkpoint is needed. Only the live end-to-end verification against the existing endpoint remains, which is covered by **Plan 02-02, Task 2**.
 
 ## Environment Availability
 
