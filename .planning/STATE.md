@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 3
 current_phase_name: Links, Contact & CTA Cleanup
 status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-07-06T18:09:52.226Z"
+stopped_at: Phase 3 context gathered
+last_updated: "2026-07-06T19:56:24.396Z"
 last_activity: 2026-07-07
-last_activity_desc: "Quick task 260707-05y — promoted dark landing page (with light/dark switch) to /"
+last_activity_desc: "Quick task 260707-05y: promoted dark landing page to / (removed /new-12345)"
 progress:
   total_phases: 3
   completed_phases: 2
@@ -99,6 +99,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-06T18:03:16.455Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-registration-backend-migration/02-CONTEXT.md
+Last session: 2026-07-06T19:56:24.388Z
+Stopped at: Phase 3 context gathered
+Resume file: .planning/phases/03-links-contact-cta-cleanup/03-CONTEXT.md
