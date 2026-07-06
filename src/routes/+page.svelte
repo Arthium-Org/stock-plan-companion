@@ -236,7 +236,12 @@
 	<nav class="nav-blur sticky top-0 z-50">
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
 			<div class="flex items-center gap-3">
-				<img src="/logo.png" alt="Stock Plan Companion" class="h-9 w-auto" />
+				<img
+					src="/logo-mark.png"
+					alt="Stock Plan Companion"
+					class="h-9 w-9 rounded-full object-cover"
+					style="box-shadow: 0 0 16px 2px var(--accent-glow);"
+				/>
 			</div>
 			<div class="flex items-center gap-2 sm:gap-3">
 				<!-- eslint-disable svelte/no-navigation-without-resolve -- repoUrl is an external GitHub repo URL, not an internal SvelteKit route, so resolve() does not apply -->
