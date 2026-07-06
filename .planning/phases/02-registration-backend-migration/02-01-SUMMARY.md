@@ -132,3 +132,7 @@ None - plan executed exactly as written. Both handlers match the plan's specifie
 ---
 *Phase: 02-registration-backend-migration*
 *Completed: 2026-07-06*
+
+## Self-Check: PASSED
+
+All created/modified files verified present on disk (src/lib/registration.ts, src/lib/registration.test.ts, src/routes/+page.svelte, src/routes/new-12345/+page.svelte, this SUMMARY.md). All 4 commit hashes (13c32e3, acdb265, 5c62b19, b082fb0) verified present in git log.
