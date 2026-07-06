@@ -13,7 +13,8 @@
 		Sun,
 		Moon,
 		Code2,
-		ArrowRight
+		ArrowRight,
+		TrendingUp
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
 	import { onMount } from 'svelte';
@@ -136,10 +137,7 @@
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F7e71c1411bd64f07ab68e317b7ab0db9?format=webp&width=800&height=1200',
 			title: 'Sell Advisor',
 			description: 'Smart recommendations for optimizing tax outcomes when selling your shares',
-			blurRegions: [
-				{ top: '1%', left: '8%', width: '35%', height: '8%' },
-				{ top: '25%', left: '10%', width: '80%', height: '45%' }
-			]
+			blurRegions: [{ top: '1%', left: '8%', width: '35%', height: '8%' }]
 		},
 		{
 			src: 'https://cdn.builder.io/api/v1/image/assets%2F7d68e2c336764378935ec3f2f539f5e9%2F12babee9cf6043bfb764f9e9ec54bd50?format=webp&width=800&height=1200',
@@ -186,6 +184,11 @@
 			icon: FileCheck,
 			title: 'Capital Gains & Tax Reports',
 			description: 'Complete tax documents for Schedule FA, capital gains, and foreign income reporting'
+		},
+		{
+			icon: TrendingUp,
+			title: 'Sell Advisor',
+			description: 'Lot-level advice on which shares to sell to optimize your tax outcome, with STCG/LTCG impact per lot'
 		},
 		{
 			icon: Lock,
