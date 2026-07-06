@@ -14,12 +14,14 @@
 
 export const appRepo = 'Arthium-Org/stock-plan-companion-app';
 export const macAssetName = 'StockPlanCompanion-arm64.dmg';
+export const winAssetName = 'StockPlan-Setup.exe';
 
 export const macDownloadUrl = `https://github.com/${appRepo}/releases/latest/download/${macAssetName}`;
+export const winDownloadUrl = `https://github.com/${appRepo}/releases/latest/download/${winAssetName}`;
 
 // Shared base URL for all "view source on GitHub" links on the marketing
 // site (nav icon, footer link). Composed from appRepo so a future repo
 // rename only requires editing that one constant.
 export const repoUrl = `https://github.com/${appRepo}`;
 
-export const windowsAvailable = false;
+export const windowsAvailable = true;

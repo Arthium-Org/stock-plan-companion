@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { macDownloadUrl, repoUrl, windowsAvailable } from '$lib/downloads';
+import { macDownloadUrl, repoUrl, winDownloadUrl, windowsAvailable } from '$lib/downloads';
 
 describe('downloads config', () => {
 	it('resolves the macOS download to the exact latest-release asset URL', () => {
@@ -8,8 +8,19 @@ describe('downloads config', () => {
 		);
 	});
 
-	it('marks Windows as unavailable', () => {
-		expect(windowsAvailable).toBe(false);
+	it('marks Windows as available', () => {
+		expect(windowsAvailable).toBe(true);
+	});
+
+	it('resolves the Windows download to the exact latest-release asset URL', () => {
+		expect(winDownloadUrl).toBe(
+			'https://github.com/Arthium-Org/stock-plan-companion-app/releases/latest/download/StockPlan-Setup.exe'
+		);
+	});
+
+	it('uses the version-less latest-release path for the Windows download on the app repo', () => {
+		expect(winDownloadUrl).toContain('releases/latest/download/');
+		expect(winDownloadUrl).toContain('stock-plan-companion-app');
 	});
 
 	it('uses the version-less latest-release path on the app repo', () => {

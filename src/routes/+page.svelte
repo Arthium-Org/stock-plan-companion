@@ -18,7 +18,7 @@
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
 	import { appsScriptUrl } from '$lib/registration';
-	import { macDownloadUrl, repoUrl, windowsAvailable } from '$lib/downloads';
+	import { macDownloadUrl, repoUrl, winDownloadUrl, windowsAvailable } from '$lib/downloads';
 	import { onMount } from 'svelte';
 
 	// Theme is scoped to this page's wrapper (.spc-v2) so it never touches the
@@ -623,7 +623,13 @@
 										macOS (Apple Silicon)
 									</a>
 									<!-- eslint-enable svelte/no-navigation-without-resolve -->
-									{#if !windowsAvailable}
+									{#if windowsAvailable}
+										<!-- eslint-disable svelte/no-navigation-without-resolve -- winDownloadUrl is an external GitHub release URL, not an internal SvelteKit route, so resolve() does not apply -->
+										<a href={winDownloadUrl} download class="btn-secondary text-center">
+											Windows
+										</a>
+										<!-- eslint-enable svelte/no-navigation-without-resolve -->
+									{:else}
 										<button
 											type="button"
 											disabled
