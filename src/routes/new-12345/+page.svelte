@@ -17,6 +17,7 @@
 		TrendingUp
 	} from '@lucide/svelte';
 	import BlurredScreenshot from '$lib/BlurredScreenshot.svelte';
+	import { appsScriptUrl } from '$lib/registration';
 	import { onMount } from 'svelte';
 
 	// Theme is scoped to this page's wrapper (.spc-v2) so it never touches the
@@ -196,15 +197,27 @@
 		formError = '';
 
 		try {
-			const response = await fetch('https://formspree.io/f/xvzjdkaj', {
+			const payload = {
+				name: (formData.get('name') as string) || '',
+				email: formData.get('email') as string,
+				consent: formData.get('consent') === 'on',
+				source: '/new-12345'
+			};
+
+			const response = await fetch(appsScriptUrl, {
 				method: 'POST',
-				body: formData,
-				headers: {
-					Accept: 'application/json'
-				}
+				headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+				body: JSON.stringify(payload)
 			});
 
-			if (response.ok) {
+			let parsed: { ok?: boolean } = {};
+			try {
+				parsed = await response.json();
+			} catch {
+				// Non-JSON body (e.g. Apps Script platform error page) — falls through to failure below.
+			}
+
+			if (response.ok && parsed.ok === true) {
 				formSubmitted = true;
 				form.reset();
 				// TODO: update these direct-download URLs on EVERY release (new tag + filename).
