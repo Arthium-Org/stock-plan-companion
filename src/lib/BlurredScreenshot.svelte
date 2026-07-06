@@ -15,11 +15,11 @@
 <div class="screenshot-container">
 	<img {src} {alt} class="w-full h-auto" />
 	{#if show}
-		{#each blurRegions as region}
+		{#each blurRegions as region, i (i)}
 			<div
 				class="blur-date-id"
 				style="top: {region.top}; left: {region.left}; width: {region.width}; height: {region.height};"
-			/>
+			></div>
 		{/each}
 	{/if}
 </div>
