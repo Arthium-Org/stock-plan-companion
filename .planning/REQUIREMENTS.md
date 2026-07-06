@@ -9,10 +9,10 @@ Launch-polish scope. Each maps to a roadmap phase.
 
 ### Downloads
 
-- [ ] **DL-01**: Visitor can download the signed macOS (Apple Silicon / arm64) DMG after registering, via a button clearly labeled "macOS (Apple Silicon)"
-- [ ] **DL-02**: The macOS download resolves to the DMG asset published in a GitHub Release of `Arthium-Org/stock-plan-companion-app`
-- [ ] **DL-03**: Windows download appears as a non-broken "coming soon" state until the `.exe` is published
-- [ ] **DL-04**: Download URLs (tag + filename) live in a single config location, updatable per release without editing page logic
+- [x] **DL-01**: Visitor can download the signed macOS (Apple Silicon / arm64) DMG after registering, via a button clearly labeled "macOS (Apple Silicon)"
+- [x] **DL-02**: The macOS download resolves to the DMG asset published in a GitHub Release of `Arthium-Org/stock-plan-companion-app`
+- [x] **DL-03**: Windows download appears as a non-broken "coming soon" state until the `.exe` is published
+- [x] **DL-04**: Download URLs (tag + filename) live in a single config location, updatable per release without editing page logic
 
 ### Registration
 
@@ -54,10 +54,10 @@ Deferred to a future cycle.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DL-01 | Phase 1 | Pending |
-| DL-02 | Phase 1 | Pending |
-| DL-03 | Phase 1 | Pending |
-| DL-04 | Phase 1 | Pending |
+| DL-01 | Phase 1 | Complete |
+| DL-02 | Phase 1 | Complete |
+| DL-03 | Phase 1 | Complete |
+| DL-04 | Phase 1 | Complete |
 | REG-01 | Phase 2 | Pending |
 | REG-02 | Phase 2 | Pending |
 | REG-03 | Phase 2 | Pending |
@@ -68,6 +68,7 @@ Deferred to a future cycle.
 | LINK-04 | Phase 3 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 12 total
 - Mapped to phases: 12 (Phase 1: 4, Phase 2: 4, Phase 3: 4)
 - Unmapped: 0 ✓
