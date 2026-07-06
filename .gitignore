@@ -32,3 +32,6 @@ vite.config.ts.timestamp-*
 .claude/package.json
 .claude/gsd-file-manifest.json
 .claude/gsd-install-state.json
+
+# GSD research fetch cache (machine-generated)
+.planning/research/.cache/
