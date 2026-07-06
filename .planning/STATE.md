@@ -2,11 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 03
-status: Milestone v1.0 shipped — main pushed to origin (838d914), GitHub Pages deploy triggered
+current_phase: 0
+status: Awaiting next milestone
 stopped_at: Phase 03 plan 01 complete — links/CTA cleanup + Windows enablement + branding shipped, checkpoint approved
-last_updated: "2026-07-06T21:45:42.546Z"
-last_activity: 2026-07-07
+last_updated: "2026-07-06T22:00:05.453Z"
+last_activity: 2026-07-06
+last_activity_desc: Milestone v1.0 completed and archived
 progress:
   total_phases: 3
   completed_phases: 3
@@ -20,19 +21,17 @@ current_phase_name: Links, Contact & CTA Cleanup
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-06)
+See: .planning/PROJECT.md (updated 2026-07-07)
 
 **Core value:** A visitor can understand what the app does and download the correct, working build after registering — with every registration reliably captured (no monthly submission cap).
-**Current focus:** Phase 03 — Links, Contact & CTA Cleanup
+**Current focus:** v1.0 shipped & archived — planning next milestone
 
 ## Current Position
 
-Phase: 03
-Plan: Not started
-Status: Milestone v1.0 shipped — main pushed to origin (838d914), GitHub Pages deploy triggered
-Last activity: 2026-07-07
-
-Progress: [██████████] 100%
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-06 — Milestone v1.0 completed and archived
 
 ## Performance Metrics
 
@@ -96,14 +95,18 @@ None yet.
 
 ## Deferred Items
 
-Items acknowledged and carried forward from previous milestone close:
+Items acknowledged and deferred at milestone close on 2026-07-07:
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none — first milestone)* | | | |
+| verification | Phase 01 human visual checks (download-button render, macOS hover tooltip, disabled-Windows non-interactivity) — superseded by Phase 03 Windows enablement; confirm on live arthium.org | human_needed / superseded | 2026-07-07 (v1.0 close) |
 
 ## Session Continuity
 
 Last session: 2026-07-06T21:25:07.606Z
 Stopped at: Phase 03 plan 01 complete — links/CTA cleanup + Windows enablement + branding shipped, checkpoint approved
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
