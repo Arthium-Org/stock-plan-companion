@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {
 		FileText,
-		BarChart3,
 		Calendar,
 		FileCheck,
 		Lock,
@@ -237,13 +236,7 @@
 	<nav class="nav-blur sticky top-0 z-50">
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
 			<div class="flex items-center gap-3">
-				<div
-					class="flex h-9 w-9 items-center justify-center rounded-xl"
-					style="background-image: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 6px 20px -6px var(--accent-glow);"
-				>
-					<BarChart3 size={18} style="color: var(--on-accent)" />
-				</div>
-				<span class="text-lg font-semibold tracking-tight t-strong">Stock Plan Companion</span>
+				<img src="/logo.png" alt="Stock Plan Companion" class="h-9 w-auto" />
 			</div>
 			<div class="flex items-center gap-2 sm:gap-3">
 				<!-- eslint-disable svelte/no-navigation-without-resolve -- repoUrl is an external GitHub repo URL, not an internal SvelteKit route, so resolve() does not apply -->
