@@ -29,7 +29,7 @@
 		try {
 			const t = localStorage.getItem('theme-v2');
 			if (t === 'light' || t === 'dark') theme = t;
-		} catch (e) {
+		} catch {
 			/* ignore */
 		}
 	});
@@ -37,7 +37,7 @@
 		theme = theme === 'dark' ? 'light' : 'dark';
 		try {
 			localStorage.setItem('theme-v2', theme);
-		} catch (e) {
+		} catch {
 			/* ignore */
 		}
 	}
@@ -220,7 +220,7 @@
 			} else {
 				formError = 'Failed to submit form. Please try again.';
 			}
-		} catch (error) {
+		} catch {
 			formError = 'An error occurred. Please try again.';
 		} finally {
 			formLoading = false;
@@ -351,7 +351,7 @@
 					</div>
 
 					<div class="grid gap-5 sm:grid-cols-2">
-						{#each features as feature}
+						{#each features as feature (feature.title)}
 							<div
 								class="card card-hover p-6 {feature.highlight ? 'sm:col-span-2' : ''}"
 								style={feature.highlight
@@ -421,7 +421,7 @@
 
 						<!-- Thumbnail Gallery -->
 						<div class="flex gap-2 overflow-x-auto px-4 pb-4">
-							{#each screenshots as screenshot, i}
+							{#each screenshots as screenshot, i (screenshot.src)}
 								<button
 									on:click={() => (activeScreenshot = i)}
 									class="flex-shrink-0 overflow-hidden rounded-lg border-2 transition"
@@ -435,7 +435,7 @@
 											alt={screenshot.title}
 											class="h-full w-full object-cover"
 										/>
-										{#each screenshot.blurRegions || [] as region}
+										{#each screenshot.blurRegions || [] as region, ri (ri)}
 											<div
 												class="absolute"
 												style="top: {region.top}; left: {region.left}; width: {region.width}; height: {region.height}; backdrop-filter: blur(6px); border-radius: 0.25rem;"
@@ -476,7 +476,7 @@
 								Available today
 							</h3>
 							<ul class="grid gap-3 sm:grid-cols-2">
-								{#each ['E*TRADE support', 'RSU & ESPP record management', 'Desktop application', 'Open source'] as item}
+								{#each ['E*TRADE support', 'RSU & ESPP record management', 'Desktop application', 'Open source'] as item (item)}
 									<li class="flex items-start gap-3">
 										<CheckCircle size={18} class="mt-0.5 flex-shrink-0" style="color: var(--success)" />
 										<span class="t-muted">{item}</span>
@@ -488,7 +488,7 @@
 						<div class="card-2 p-8">
 							<h3 class="mb-6 text-lg font-semibold t-strong">Coming soon</h3>
 							<ul class="grid gap-3 sm:grid-cols-2">
-								{#each ['Additional broker support', 'Dividend income support', 'Better Schedule FA assistance', 'More tax reports'] as item}
+								{#each ['Additional broker support', 'Dividend income support', 'Better Schedule FA assistance', 'More tax reports'] as item (item)}
 									<li class="flex items-start gap-3">
 										<span class="t-accent">→</span>
 										<span class="t-muted">{item}</span>
@@ -510,7 +510,7 @@
 					</div>
 
 					<div class="grid gap-5 md:grid-cols-3">
-						{#each [{ n: '1', t: 'Download Holdings', d: 'Log into E*TRADE Stock Plan → Holdings tab → Download → Download Expanded. Save the .xlsx file.', c: 'Current portfolio snapshot' }, { n: '2', t: 'Download Benefit History', d: 'Go to My Account → Benefit History. Click Download → Download Expanded. Save the .xlsx file.', c: 'Grants, vests, and sales history' }, { n: '3', t: 'Download Gains & Losses', d: 'My Account → Gains & Losses. Select tax year, click Apply, then Download → Download Expanded.', c: 'Capital gains tax data' }] as step}
+						{#each [{ n: '1', t: 'Download Holdings', d: 'Log into E*TRADE Stock Plan → Holdings tab → Download → Download Expanded. Save the .xlsx file.', c: 'Current portfolio snapshot' }, { n: '2', t: 'Download Benefit History', d: 'Go to My Account → Benefit History. Click Download → Download Expanded. Save the .xlsx file.', c: 'Grants, vests, and sales history' }, { n: '3', t: 'Download Gains & Losses', d: 'My Account → Gains & Losses. Select tax year, click Apply, then Download → Download Expanded.', c: 'Capital gains tax data' }] as step (step.n)}
 							<div class="card flex flex-col p-6">
 								<div
 									class="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl text-lg font-bold"
@@ -537,7 +537,7 @@
 									everything automatically.
 								</p>
 								<ul class="space-y-3 text-sm">
-									{#each ['Files are validated and parsed in order', 'Data stays private on your computer', 'Instant access to tax reports and analysis'] as point}
+									{#each ['Files are validated and parsed in order', 'Data stays private on your computer', 'Instant access to tax reports and analysis'] as point (point)}
 										<li class="flex items-start gap-3">
 											<CheckCircle size={18} class="mt-0.5 flex-shrink-0" style="color: var(--accent-fg)" />
 											<span class="t-muted">{point}</span>
@@ -626,6 +626,7 @@
 								</div>
 
 								<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+									<!-- eslint-disable svelte/no-navigation-without-resolve -- macDownloadUrl is an external GitHub release URL, not an internal SvelteKit route, so resolve() does not apply -->
 									<a
 										href={macDownloadUrl}
 										download
@@ -634,6 +635,7 @@
 									>
 										macOS (Apple Silicon)
 									</a>
+									<!-- eslint-enable svelte/no-navigation-without-resolve -->
 									{#if !windowsAvailable}
 										<button
 											type="button"
